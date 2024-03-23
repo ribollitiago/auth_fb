@@ -1,10 +1,11 @@
-import 'package:auth_sql/components/textfield_confirm_password.dart';
-import 'package:auth_sql/components/textfield_email.dart';
-import 'package:auth_sql/components/textfield_password.dart';
-import 'package:auth_sql/firebase/auth_firebase.dart';
+import 'package:auth_sql/components/auth/textfield_confirm_password.dart';
+import 'package:auth_sql/components/auth/textfield_email.dart';
+import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/screens/login.dart';
+import 'package:auth_sql/store/auth.store.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -17,7 +18,6 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final confirmPassword = TextEditingController();
-  final AuthFB authFB = AuthFB();
 
   bool isVisible = false;
 
@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    //final store = Provider.of<AuthStore>(context);
+    final store = Provider.of<AuthStore>(context);
 
     return Scaffold(
       body: Center(
@@ -72,7 +72,7 @@ class _RegisterState extends State<Register> {
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            authFB.authWithEmailPassword(
+                            store.signUpWithEmailPassword(
                                 _emailController.text,
                                 _passwordController.text);
                             Navigator.push(

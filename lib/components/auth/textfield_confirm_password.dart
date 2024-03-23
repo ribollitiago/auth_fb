@@ -12,7 +12,7 @@ class TextFieldConfirmPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AuthStore>(context);
-    
+
     TextEditingController _confirmPasswordController =
         TextEditingController(text: confirmPassword);
 
@@ -23,30 +23,30 @@ class TextFieldConfirmPassword extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.deepPurple.withOpacity(.3)),
       child: Observer(
-          builder: (_) => TextFormField(
-        controller: _confirmPasswordController,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return "Digite uma senha";
-          } else if(value != store.passwordConfirm()){
-            return "As senhas estão diferentes";
-          }
-          return null;
-        },
-        obscureText: !store.isVisible,
-            decoration: InputDecoration(
-                icon: const Icon(Icons.lock),
-                border: InputBorder.none,
-                hintText: "Senha",
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      store.visible();
-                    },
-                    icon: Icon(store.isVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off))),
+        builder: (_) => TextFormField(
+          controller: _confirmPasswordController,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Digite uma senha";
+            } else if (confirmPassword != store.passwordConfirm()) {
+              return "As senhas estão diferentes";
+            }
+            return null;
+          },
+          obscureText: !store.isVisible,
+          decoration: InputDecoration(
+              icon: const Icon(Icons.lock),
+              border: InputBorder.none,
+              hintText: "Senha",
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    store.visible();
+                  },
+                  icon: Icon(store.isVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off))),
+        ),
       ),
-      )
     );
   }
 }

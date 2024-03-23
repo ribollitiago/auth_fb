@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';
+import 'package:http/http.dart' as http;
 
 part 'auth.store.g.dart';
 
 class AuthStore = _AuthStore with _$AuthStore;
 
 abstract class _AuthStore with Store {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  static const _url =
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBlb1hQGuNgpJs0dkTKhAQ-l5YqS3XVM88';
 
   @observable
   User? currentUser;
@@ -47,15 +52,15 @@ abstract class _AuthStore with Store {
 
   @action
   Future<void> signUpWithEmailPassword(String email, String password) async {
-    try {
-      UserCredential credential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      currentUser = credential.user;
-    } catch (e) {
-      print(e);
-    }
+     final response = await http.post(
+      Uri.parse(_url),
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'returnSecureToken': true,
+      }),
+    );
+    print(jsonDecode(response.body));
   }
 
   @action

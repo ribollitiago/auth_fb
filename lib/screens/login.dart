@@ -1,5 +1,5 @@
-import 'package:auth_sql/components/textfield_email.dart';
-import 'package:auth_sql/components/textfield_password.dart';
+import 'package:auth_sql/components/auth/textfield_email.dart';
+import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/firebase/auth_firebase.dart';
 import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/screens/register.dart';

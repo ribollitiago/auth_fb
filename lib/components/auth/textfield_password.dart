@@ -30,7 +30,8 @@ class TextFieldPassword extends StatelessWidget {
               } else if (value.length < 6) {
                 return "Digite uma senha maior";
               }
-              return store.setPassword(password);
+              store.setPassword(password);
+              return null;
             },
             obscureText: !store.isVisible,
             decoration: InputDecoration(
