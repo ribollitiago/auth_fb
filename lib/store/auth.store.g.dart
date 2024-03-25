@@ -41,19 +41,49 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
-  late final _$passwordAtom =
-      Atom(name: '_AuthStore.password', context: context);
+  late final _$usuarioIDAtom =
+      Atom(name: '_AuthStore.usuarioID', context: context);
 
   @override
-  String get password {
-    _$passwordAtom.reportRead();
-    return super.password;
+  String get usuarioID {
+    _$usuarioIDAtom.reportRead();
+    return super.usuarioID;
   }
 
   @override
-  set password(String value) {
-    _$passwordAtom.reportWrite(value, super.password, () {
-      super.password = value;
+  set usuarioID(String value) {
+    _$usuarioIDAtom.reportWrite(value, super.usuarioID, () {
+      super.usuarioID = value;
+    });
+  }
+
+  late final _$cpfAtom = Atom(name: '_AuthStore.cpf', context: context);
+
+  @override
+  String get cpf {
+    _$cpfAtom.reportRead();
+    return super.cpf;
+  }
+
+  @override
+  set cpf(String value) {
+    _$cpfAtom.reportWrite(value, super.cpf, () {
+      super.cpf = value;
+    });
+  }
+
+  late final _$nomeAtom = Atom(name: '_AuthStore.nome', context: context);
+
+  @override
+  String get nome {
+    _$nomeAtom.reportRead();
+    return super.nome;
+  }
+
+  @override
+  set nome(String value) {
+    _$nomeAtom.reportWrite(value, super.nome, () {
+      super.nome = value;
     });
   }
 
@@ -70,6 +100,78 @@ mixin _$AuthStore on _AuthStore, Store {
     _$emailAtom.reportWrite(value, super.email, () {
       super.email = value;
     });
+  }
+
+  late final _$passwordAtom =
+      Atom(name: '_AuthStore.password', context: context);
+
+  @override
+  String get password {
+    _$passwordAtom.reportRead();
+    return super.password;
+  }
+
+  @override
+  set password(String value) {
+    _$passwordAtom.reportWrite(value, super.password, () {
+      super.password = value;
+    });
+  }
+
+  late final _$dataDeCriacaoAtom =
+      Atom(name: '_AuthStore.dataDeCriacao', context: context);
+
+  @override
+  dynamic get dataDeCriacao {
+    _$dataDeCriacaoAtom.reportRead();
+    return super.dataDeCriacao;
+  }
+
+  @override
+  set dataDeCriacao(dynamic value) {
+    _$dataDeCriacaoAtom.reportWrite(value, super.dataDeCriacao, () {
+      super.dataDeCriacao = value;
+    });
+  }
+
+  late final _$telefoneAtom =
+      Atom(name: '_AuthStore.telefone', context: context);
+
+  @override
+  String get telefone {
+    _$telefoneAtom.reportRead();
+    return super.telefone;
+  }
+
+  @override
+  set telefone(String value) {
+    _$telefoneAtom.reportWrite(value, super.telefone, () {
+      super.telefone = value;
+    });
+  }
+
+  late final _$numContratoAtom =
+      Atom(name: '_AuthStore.numContrato', context: context);
+
+  @override
+  String get numContrato {
+    _$numContratoAtom.reportRead();
+    return super.numContrato;
+  }
+
+  @override
+  set numContrato(String value) {
+    _$numContratoAtom.reportWrite(value, super.numContrato, () {
+      super.numContrato = value;
+    });
+  }
+
+  late final _$setUserIdAsyncAction =
+      AsyncAction('_AuthStore.setUserId', context: context);
+
+  @override
+  Future<void> setUserId() {
+    return _$setUserIdAsyncAction.run(() => super.setUserId());
   }
 
   late final _$signInWithEmailPasswordAsyncAction =
@@ -98,8 +200,59 @@ mixin _$AuthStore on _AuthStore, Store {
     return _$signOutAsyncAction.run(() => super.signOut());
   }
 
+  late final _$cadastroUsuarioAsyncAction =
+      AsyncAction('_AuthStore.cadastroUsuario', context: context);
+
+  @override
+  Future cadastroUsuario() {
+    return _$cadastroUsuarioAsyncAction.run(() => super.cadastroUsuario());
+  }
+
+  late final _$addDetalhesUsuariosAsyncAction =
+      AsyncAction('_AuthStore.addDetalhesUsuarios', context: context);
+
+  @override
+  Future<dynamic> addDetalhesUsuarios(
+      Map<String, dynamic> usuariosMap, String id) {
+    return _$addDetalhesUsuariosAsyncAction
+        .run(() => super.addDetalhesUsuarios(usuariosMap, id));
+  }
+
   late final _$_AuthStoreActionController =
       ActionController(name: '_AuthStore', context: context);
+
+  @override
+  void setCPF(String cpf) {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setCPF');
+    try {
+      return super.setCPF(cpf);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setNome(String nome) {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setNome');
+    try {
+      return super.setNome(nome);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEmail(String email) {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setEmail');
+    try {
+      return super.setEmail(email);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setPassword(String password) {
@@ -113,11 +266,22 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
-  void setEmail(String email) {
-    final _$actionInfo =
-        _$_AuthStoreActionController.startAction(name: '_AuthStore.setEmail');
+  void setTelefone(String telefone) {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+        name: '_AuthStore.setTelefone');
     try {
-      return super.setEmail(email);
+      return super.setTelefone(telefone);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setNumContrato(String numContrato) {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+        name: '_AuthStore.setNumContrato');
+    try {
+      return super.setNumContrato(numContrato);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }
@@ -150,8 +314,14 @@ mixin _$AuthStore on _AuthStore, Store {
     return '''
 currentUser: ${currentUser},
 isVisible: ${isVisible},
+usuarioID: ${usuarioID},
+cpf: ${cpf},
+nome: ${nome},
+email: ${email},
 password: ${password},
-email: ${email}
+dataDeCriacao: ${dataDeCriacao},
+telefone: ${telefone},
+numContrato: ${numContrato}
     ''';
   }
 }
