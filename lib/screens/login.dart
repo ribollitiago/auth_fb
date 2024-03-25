@@ -1,9 +1,10 @@
 import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
-import 'package:auth_sql/firebase/auth_firebase.dart';
 import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/screens/register.dart';
+import 'package:auth_sql/store/auth.store.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final AuthFB authFB = AuthFB();
 
   //bool para deixar a senha visivel ou não
   bool isVisible = false;
@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final store = Provider.of<AuthStore>(context);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -64,9 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            authFB.signInWithEmailPassword(
-                                _emailController.text,
-                                _passwordController.text);
+                            store.signInWithEmailPassword();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

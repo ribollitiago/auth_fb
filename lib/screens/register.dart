@@ -1,4 +1,3 @@
-import 'package:auth_sql/components/auth/textfield_confirm_password.dart';
 import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/screens/login.dart';
@@ -17,7 +16,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final confirmPassword = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool isVisible = false;
 
@@ -57,7 +56,7 @@ class _RegisterState extends State<Register> {
 
                   //Confirmar Senha field
                   TextFieldConfirmPassword(
-                      confirmPassword: confirmPassword.text
+                      confirmPassword: _confirmPasswordController.text
                   ),
 
                   //Botão Registrar field
@@ -72,9 +71,7 @@ class _RegisterState extends State<Register> {
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            store.signUpWithEmailPassword(
-                                _emailController.text,
-                                _passwordController.text);
+                            store.signUpWithEmailPassword();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -57,22 +57,37 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$emailAtom = Atom(name: '_AuthStore.email', context: context);
+
+  @override
+  String get email {
+    _$emailAtom.reportRead();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.reportWrite(value, super.email, () {
+      super.email = value;
+    });
+  }
+
   late final _$signInWithEmailPasswordAsyncAction =
       AsyncAction('_AuthStore.signInWithEmailPassword', context: context);
 
   @override
-  Future<void> signInWithEmailPassword(String email, String password) {
+  Future<void> signInWithEmailPassword() {
     return _$signInWithEmailPasswordAsyncAction
-        .run(() => super.signInWithEmailPassword(email, password));
+        .run(() => super.signInWithEmailPassword());
   }
 
   late final _$signUpWithEmailPasswordAsyncAction =
       AsyncAction('_AuthStore.signUpWithEmailPassword', context: context);
 
   @override
-  Future<void> signUpWithEmailPassword(String email, String password) {
+  Future<void> signUpWithEmailPassword() {
     return _$signUpWithEmailPasswordAsyncAction
-        .run(() => super.signUpWithEmailPassword(email, password));
+        .run(() => super.signUpWithEmailPassword());
   }
 
   late final _$signOutAsyncAction =
@@ -87,11 +102,22 @@ mixin _$AuthStore on _AuthStore, Store {
       ActionController(name: '_AuthStore', context: context);
 
   @override
-  dynamic setPassword(String password) {
+  void setPassword(String password) {
     final _$actionInfo = _$_AuthStoreActionController.startAction(
         name: '_AuthStore.setPassword');
     try {
       return super.setPassword(password);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEmail(String email) {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setEmail');
+    try {
+      return super.setEmail(email);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }
@@ -124,7 +150,8 @@ mixin _$AuthStore on _AuthStore, Store {
     return '''
 currentUser: ${currentUser},
 isVisible: ${isVisible},
-password: ${password}
+password: ${password},
+email: ${email}
     ''';
   }
 }

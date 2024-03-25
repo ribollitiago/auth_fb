@@ -22,36 +22,53 @@ abstract class _AuthStore with Store {
   @observable
   String password = '';
 
+  @observable
+  String email = '';
+
+
   @action
-  setPassword(String password){
-    return this.password = password;
+  void setPassword(String password){
+    this.password = password;
+  }
+
+  @action
+  void setEmail(String email){
+    this.email = email;
   }
 
   @action
   passwordConfirm(){
-    return this.password;
+    return password;
   }
 
   @action
   void visible(){
     isVisible = !isVisible;
   }
-
+  
   @action
-  Future<void> signInWithEmailPassword(String email, String password) async {
+  Future<void> signInWithEmailPassword() async {
     try {
-      UserCredential credential = await _auth.signInWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      currentUser = credential.user;
+      
+      // Usuário logado com sucesso
+      print('Usuário logado com sucesso: ${credential.user!.uid}');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('Usuário não encontrado para este e-mail.');
+      } else if (e.code == 'wrong-password') {
+        print('Senha incorreta para este usuário.');
+      }
     } catch (e) {
-      print(e);
+      print('Erro ao fazer login: $e');
     }
   }
 
   @action
-  Future<void> signUpWithEmailPassword(String email, String password) async {
+  Future<void> signUpWithEmailPassword() async {
      final response = await http.post(
       Uri.parse(_url),
       body: jsonEncode({

@@ -1,4 +1,6 @@
+import 'package:auth_sql/store/auth.store.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TextFieldEmail extends StatelessWidget {
   final String email;
@@ -7,6 +9,7 @@ class TextFieldEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = Provider.of<AuthStore>(context);
     TextEditingController _emailController = TextEditingController(text: email);
 
     return Container(
@@ -23,6 +26,7 @@ class TextFieldEmail extends StatelessWidget {
           } if (email.length < 6){
             return 'Digite um e-mail existente';
           }
+          store.setEmail(email);
           return null;
         },
         decoration: const InputDecoration(
