@@ -50,9 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   //Senha field
-                  TextFieldPassword(
-                    password: _passwordController.text
-                    ),
+                  TextFieldPassword(password: _passwordController.text),
 
                   //LOGIN button
                   const SizedBox(height: 10),
@@ -63,13 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.deepPurple),
                     child: TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            store.signInWithEmailPassword();
+                            await store.signInWithEmailPassword();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const HomePage()));
+                            store.recuperacaoDados();
                           }
                         },
                         child: const Text(

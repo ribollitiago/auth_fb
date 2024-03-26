@@ -23,7 +23,11 @@ abstract class _AuthStore with Store {
   bool isVisible = false;
 
   @observable
-  String usuarioID = '';
+  String token = '';
+
+  @observable
+  String uidUser = '';
+
 
   @observable
   String cpf = '';
@@ -38,25 +42,39 @@ abstract class _AuthStore with Store {
   String password = '';
 
   @observable
-  var dataDeCriacao = null;
-
-  @observable
   String telefone = '';
 
   @observable
   String numContrato = '';
 
+  //Get funções
   @action
-  Future<void> setUserId() async {
-    User? user = _auth.currentUser;
-
-    if (user != null) {
-      usuarioID = user.uid;
-    } else {
-      print('Nenhum usuário autenticado.');
-    }
+  getEmail() {
+    return email;
   }
 
+  @action
+  getNome() {
+    return nome;
+  }
+
+  @action
+  getCPF() {
+    return cpf;
+  }
+
+  @action
+  getPassword() {
+    return password;
+  }
+
+  
+  @action
+  usuarioUID() {
+    return uidUser;
+  }
+
+  //Set funçoes
   @action
   void setCPF(String cpf) {
     this.cpf = cpf;
@@ -87,16 +105,13 @@ abstract class _AuthStore with Store {
     this.numContrato = numContrato;
   }
 
-  @action
-  passwordConfirm() {
-    return password;
-  }
-
+  //Password field
   @action
   void visible() {
     isVisible = !isVisible;
   }
 
+  //Auth Firebase Funções
   @action
   Future<void> signInWithEmailPassword() async {
     try {
@@ -107,6 +122,8 @@ abstract class _AuthStore with Store {
 
       // Usuário logado com sucesso
       print('Usuário logado com sucesso: ${credential.user!.uid}');
+
+      uidUser = credential.user!.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('Usuário não encontrado para este e-mail.');
@@ -120,6 +137,7 @@ abstract class _AuthStore with Store {
 
   @action
   Future<void> signUpWithEmailPassword() async {
+  try {
     final response = await http.post(
       Uri.parse(_url),
       body: jsonEncode({
@@ -128,9 +146,18 @@ abstract class _AuthStore with Store {
         'returnSecureToken': true,
       }),
     );
-    print(jsonDecode(response.body));
-  }
+    final responseData = jsonDecode(response.body);
 
+    if (responseData.containsKey('idToken')) {
+      token = responseData['idToken'];
+      uidUser = responseData['localId'];
+    } 
+  } catch (e) {
+    print('Erro durante o registro: $e');
+  }
+}
+
+  //Função para Deslogar
   @action
   Future<void> signOut() async {
     try {
@@ -141,19 +168,20 @@ abstract class _AuthStore with Store {
     }
   }
 
+  //Firestore db
   @action
-  cadastroUsuario() async {
-    await setUserId(); // Aguarde a definição do ID do usuário
+  Future<void> cadastroUsuario() async {
+    print("ID do usuario ${uidUser}");
     try {
       Map<String, dynamic> usuariosInfoMap = {
-        "ID": usuarioID,
+        "ID": uidUser,
         "Nome": nome,
         "CPF": cpf,
         "Email": email,
         "Telefone": telefone,
         "Contrato": numContrato,
       };
-      await addDetalhesUsuarios(usuariosInfoMap, usuarioID);
+      await addDetalhesUsuarios(usuariosInfoMap, uidUser);
     } catch (e) {
       print(e);
     }
@@ -164,4 +192,23 @@ abstract class _AuthStore with Store {
       Map<String, dynamic> usuariosMap, String id) async {
     return await db.collection("Usuarios").doc(id).set(usuariosMap);
   }
+
+  //Setar dados após login
+  @action
+  void recuperacaoDados() {
+    db.collection(uidUser);
+    final docRef = db.collection("Usuarios").doc(uidUser);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        setNome(data['Nome']);
+        setCPF(data['CPF']);
+        setTelefone(data['Telefone']);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+  }
+
+
 }

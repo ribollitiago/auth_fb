@@ -1,6 +1,7 @@
 import 'package:auth_sql/screens/auth/login.dart';
 import 'package:auth_sql/store/auth.store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,14 +15,6 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         elevation: 0,
-        title: Text('Home Page'),
-        leading: IconButton(
-            onPressed: () {
-              //Open menu
-              //
-              //
-            },
-            icon: Icon(Icons.menu)),
         actions: [
           IconButton(
             onPressed: () {
@@ -33,6 +26,20 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-    );
+      drawer: Drawer(
+          child: Observer(
+            builder: (_) => Container(
+              color: Colors.deepPurple,
+              child: ListView(
+                children: [
+                  DrawerHeader(
+                    child: Text('Nome: ${store.getNome()}'),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
   }
 }

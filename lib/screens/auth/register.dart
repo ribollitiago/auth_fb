@@ -4,7 +4,6 @@ import 'package:auth_sql/components/auth/textfield_cpf.dart';
 import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/components/auth/textfield_telefone.dart';
-import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/screens/auth/login.dart';
 import 'package:auth_sql/store/auth.store.dart';
 
@@ -85,13 +84,13 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.deepPurple),
                     child: TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            store.signUpWithEmailPassword();
+                            await store.signUpWithEmailPassword(); 
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
+                                    builder: (context) => const LoginScreen()));
                           }
                           store.cadastroUsuario();
                         },
