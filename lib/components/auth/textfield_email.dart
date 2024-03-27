@@ -23,9 +23,7 @@ class TextFieldEmail extends StatelessWidget {
         validator: (email) {
           if (email!.isEmpty) {
             return "Digite um e-mail";
-          } if (email.length < 6){
-            return 'Digite um e-mail existente';
-          }
+          } 
           store.setEmail(email);
           return null;
         },

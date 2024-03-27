@@ -168,18 +168,18 @@ mixin _$AuthStore on _AuthStore, Store {
       AsyncAction('_AuthStore.signInWithEmailPassword', context: context);
 
   @override
-  Future<void> signInWithEmailPassword() {
+  Future<void> signInWithEmailPassword(BuildContext context) {
     return _$signInWithEmailPasswordAsyncAction
-        .run(() => super.signInWithEmailPassword());
+        .run(() => super.signInWithEmailPassword(context));
   }
 
   late final _$signUpWithEmailPasswordAsyncAction =
       AsyncAction('_AuthStore.signUpWithEmailPassword', context: context);
 
   @override
-  Future<void> signUpWithEmailPassword() {
+  Future<void> signUpWithEmailPassword(BuildContext context) {
     return _$signUpWithEmailPasswordAsyncAction
-        .run(() => super.signUpWithEmailPassword());
+        .run(() => super.signUpWithEmailPassword(context));
   }
 
   late final _$signOutAsyncAction =

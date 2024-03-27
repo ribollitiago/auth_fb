@@ -1,6 +1,5 @@
 import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
-import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/screens/auth/register.dart';
 import 'package:auth_sql/store/auth.store.dart';
 import 'package:flutter/material.dart';
@@ -63,12 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            await store.signInWithEmailPassword();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
-                            store.recuperacaoDados();
+                            await store.signInWithEmailPassword(context);
                           }
                         },
                         child: const Text(

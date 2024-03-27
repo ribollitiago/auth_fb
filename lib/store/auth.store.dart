@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:auth_sql/screens/auth/login.dart';
+import 'package:auth_sql/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,7 +30,6 @@ abstract class _AuthStore with Store {
 
   @observable
   String uidUser = '';
-
 
   @observable
   String cpf = '';
@@ -68,7 +70,6 @@ abstract class _AuthStore with Store {
     return password;
   }
 
-  
   @action
   usuarioUID() {
     return uidUser;
@@ -113,7 +114,7 @@ abstract class _AuthStore with Store {
 
   //Auth Firebase Funções
   @action
-  Future<void> signInWithEmailPassword() async {
+  Future<void> signInWithEmailPassword(BuildContext context) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -124,6 +125,9 @@ abstract class _AuthStore with Store {
       print('Usuário logado com sucesso: ${credential.user!.uid}');
 
       uidUser = credential.user!.uid;
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+      recuperacaoDados();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('Usuário não encontrado para este e-mail.');
@@ -136,26 +140,40 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  Future<void> signUpWithEmailPassword() async {
-  try {
-    final response = await http.post(
-      Uri.parse(_url),
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-        'returnSecureToken': true,
-      }),
-    );
-    final responseData = jsonDecode(response.body);
+  Future<void> signUpWithEmailPassword(BuildContext context) async {
+    try {
+      final response = await http.post(
+        Uri.parse(_url),
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+          'returnSecureToken': true,
+        }),
+      );
+      final responseData = jsonDecode(response.body);
 
-    if (responseData.containsKey('idToken')) {
-      token = responseData['idToken'];
-      uidUser = responseData['localId'];
-    } 
-  } catch (e) {
-    print('Erro durante o registro: $e');
+      if (responseData.containsKey('idToken')) {
+        token = responseData['idToken'];
+        uidUser = responseData['localId'];
+
+        await cadastroUsuario();
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        print('Email já está em uso.');
+      } else if (e.code == 'weak-password') {
+        print('A senha fornecida é muito fraca.');
+      }
+    } catch (e) {
+      print('Erro durante o registro: $e');
+    }
   }
-}
 
   //Função para Deslogar
   @action
@@ -196,19 +214,21 @@ abstract class _AuthStore with Store {
   //Setar dados após login
   @action
   void recuperacaoDados() {
-    db.collection(uidUser);
-    final docRef = db.collection("Usuarios").doc(uidUser);
-    docRef.get().then(
-      (DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    try {
+      db.collection(uidUser);
+      final docRef = db.collection("Usuarios").doc(uidUser);
+      docRef.get().then(
+        (DocumentSnapshot doc) {
+          final data = doc.data() as Map<String, dynamic>;
 
-        setNome(data['Nome']);
-        setCPF(data['CPF']);
-        setTelefone(data['Telefone']);
-      },
-      onError: (e) => print("Error getting document: $e"),
-    );
+          setNome(data['Nome']);
+          setCPF(data['CPF']);
+          setTelefone(data['Telefone']);
+        },
+        onError: (e) => print("Error getting document: $e"),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
-
-
 }
