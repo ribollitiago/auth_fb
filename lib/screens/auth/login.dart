@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: MediaQuery.of(context).size.width * .9,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple),
+                        color: Colors.green[500]),
                     child: TextButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
@@ -72,27 +72,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   //SigUp Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Não possui conta?"),
-                      TextButton(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Não possui conta?"),
+                        TextButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Register()));
+                                    builder: (context) => const Register()));
                           },
-                          child: const Text("Crie Agora")),
-                    ],
+                          child: const Text(
+                            "Crie Agora",
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-
-                  isLoginTrue
-                      ? const Text(
-                          "Email/Senha inválidos",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : const SizedBox(),
                 ],
               ),
             ),

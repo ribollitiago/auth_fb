@@ -1,41 +1,60 @@
 import 'package:auth_sql/screens/agendamento_page.dart';
-import 'package:auth_sql/store/auth.store.dart';
+import 'package:auth_sql/screens/minhaconta_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
-  const NavigationDrawerWidget({Key? key}) : super(key: key);
+  final padding = EdgeInsets.symmetric(horizontal: 20);
 
   @override
   Widget build(BuildContext context) {
-    final store = Provider.of<AuthStore>(context);
-    
     return Drawer(
       child: Material(
-        color: Colors.deepPurple,
+        color: Colors.green[600],
         child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text('${store.getNome()}'),
-              accountEmail: Text('${store.getEmail()}'),
-              decoration: const BoxDecoration(color: Colors.deepPurple),
-            ),
-            ListTile(
-              leading: const Icon(Icons.calendar_month),
-              title: const Text('Agendamento'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Agendamento(),
-                  ),
-                );
-              },
-            ), 
+          padding: padding,
+          children: <Widget>[
+            const SizedBox(height: 48),
+            buildMenuItem(
+                text: 'Minha conta',
+                icon: Icons.people,
+                onClick: () => selectedItem(context, 0)),
+            const SizedBox(height: 24),
+            const Divider(color: Colors.white),
+            const SizedBox(height: 24),
+            buildMenuItem(
+                text: 'Agendamento',
+                icon: Icons.calendar_today_rounded,
+                onClick: () => selectedItem(context, 1)),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildMenuItem(
+      {required String text, required IconData icon, VoidCallback? onClick}) {
+    final color = Colors.white;
+
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(text, style: TextStyle(color: color)),
+      onTap: onClick,
+    );
+  }
+
+  void selectedItem(BuildContext context, int index) {
+    Navigator.of(context).pop();
+
+    switch (index) {
+      case 0:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MinhaConta()));
+        break;
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const Agendamento()));
+        break;
+
+    }
   }
 }

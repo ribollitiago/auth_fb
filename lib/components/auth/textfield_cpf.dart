@@ -17,7 +17,7 @@ class TextFieldCPF extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: Colors.deepPurple.withOpacity(.3)),
+          color: Colors.green[500]?.withOpacity(.3)),
       child: TextFormField(
         initialValue: _cpfController.text,
         validator: (cpf) {

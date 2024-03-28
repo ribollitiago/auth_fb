@@ -1,9 +1,11 @@
 import 'package:auth_sql/screens/auth/login.dart';
+import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/store/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
     return MultiProvider(
       providers: [
         Provider<AuthStore>(
@@ -28,10 +31,22 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Auth',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
           useMaterial3: true,
         ),
-        home: const LoginScreen(),
+        home: Builder(
+          builder: (context) {
+            // Verifique se há um usuário atualmente autenticado
+            final currentUser = auth.currentUser;
+            if (currentUser != null) {
+              // Se o usuário estiver autenticado, vá para a tela principal
+              return const HomePage();
+            } else {
+              // Se o usuário não estiver autenticado, vá para a tela de login
+              return const LoginScreen();
+            }
+          },
+        ),
       ),
     );
   }

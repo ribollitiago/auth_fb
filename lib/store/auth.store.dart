@@ -125,8 +125,11 @@ abstract class _AuthStore with Store {
       print('Usuário logado com sucesso: ${credential.user!.uid}');
 
       uidUser = credential.user!.uid;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+          (route) => false);
+
       recuperacaoDados();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
