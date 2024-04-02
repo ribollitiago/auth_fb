@@ -1,4 +1,4 @@
-import 'package:auth_sql/store/auth.store.dart';
+import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

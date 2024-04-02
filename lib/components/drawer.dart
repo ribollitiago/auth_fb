@@ -43,18 +43,17 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   void selectedItem(BuildContext context, int index) {
-    Navigator.of(context).pop();
+  Navigator.of(context).pop();
 
-    switch (index) {
-      case 0:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MinhaConta()));
-        break;
-      case 1:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const Agendamento()));
-        break;
-
-    }
+  switch (index) {
+    case 0:
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const MinhaConta()));
+      break;
+    case 1: // Passar listen: false
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Agendamento()));
+      break;
   }
+}
 }

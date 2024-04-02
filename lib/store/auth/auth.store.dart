@@ -123,8 +123,8 @@ abstract class _AuthStore with Store {
 
       // Usuário logado com sucesso
       print('Usuário logado com sucesso: ${credential.user!.uid}');
-
       uidUser = credential.user!.uid;
+      
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),

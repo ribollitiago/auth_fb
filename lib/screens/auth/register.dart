@@ -9,7 +9,7 @@ import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/components/auth/textfield_telefone.dart';
 import 'package:auth_sql/screens/auth/login.dart';
-import 'package:auth_sql/store/auth.store.dart';
+import 'package:auth_sql/store/auth/auth.store.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
