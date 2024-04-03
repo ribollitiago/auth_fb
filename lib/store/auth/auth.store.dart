@@ -66,6 +66,11 @@ abstract class _AuthStore with Store {
   }
 
   @action
+  getTelefone() {
+    return telefone;
+  }
+
+  @action
   getPassword() {
     return password;
   }
@@ -130,7 +135,7 @@ abstract class _AuthStore with Store {
           MaterialPageRoute(builder: (context) => const HomePage()),
           (route) => false);
 
-      recuperacaoDados();
+      recuperacaoDados(uidUser);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('Usuário não encontrado para este e-mail.');
@@ -216,7 +221,8 @@ abstract class _AuthStore with Store {
 
   //Setar dados após login
   @action
-  void recuperacaoDados() {
+  void recuperacaoDados(String currentUser) {
+    uidUser = currentUser;
     try {
       db.collection(uidUser);
       final docRef = db.collection("Usuarios").doc(uidUser);
@@ -225,6 +231,7 @@ abstract class _AuthStore with Store {
           final data = doc.data() as Map<String, dynamic>;
 
           setNome(data['Nome']);
+          setEmail(data['Email']); 
           setCPF(data['CPF']);
           setTelefone(data['Telefone']);
         },

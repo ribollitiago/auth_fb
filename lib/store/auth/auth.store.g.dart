@@ -245,6 +245,17 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
+  dynamic getTelefone() {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+        name: '_AuthStore.getTelefone');
+    try {
+      return super.getTelefone();
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic getPassword() {
     final _$actionInfo = _$_AuthStoreActionController.startAction(
         name: '_AuthStore.getPassword');
@@ -344,11 +355,11 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
-  void recuperacaoDados() {
+  void recuperacaoDados(String currentUser) {
     final _$actionInfo = _$_AuthStoreActionController.startAction(
         name: '_AuthStore.recuperacaoDados');
     try {
-      return super.recuperacaoDados();
+      return super.recuperacaoDados(currentUser);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }

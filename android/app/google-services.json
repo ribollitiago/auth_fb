@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "374833950645",
+    "project_id": "flutter-study-fb",
+    "storage_bucket": "flutter-study-fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374833950645:android:ba5f328c891b42ba1b73fc",
+        "android_client_info": {
+          "package_name": "com.example.auth_sql"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlb1hQGuNgpJs0dkTKhAQ-l5YqS3XVM88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,7 @@ class MinhaConta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AuthStore>(context);
-
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -31,6 +31,8 @@ class MinhaConta extends StatelessWidget {
             Text(store.getEmail(), style: TextStyle(color: Colors.black, fontSize: 15),),
             const SizedBox(height: 4),
             Text(store.getCPF(), style: TextStyle(color: Colors.black, fontSize: 15),),
+            const SizedBox(height: 4),
+            Text(store.getTelefone(), style: TextStyle(color: Colors.black, fontSize: 15),),
             const SizedBox(height: 24),
             SizedBox(height: 20),
             Container(
@@ -109,3 +111,4 @@ class MinhaConta extends StatelessWidget {
     );
   }
 }
+

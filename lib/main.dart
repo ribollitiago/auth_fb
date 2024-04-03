@@ -7,36 +7,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('pt_BR');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<AuthStore>(create: (_) => AuthStore()),
-        Provider<CalendarioStore>(create: (_) => CalendarioStore()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  ); // Inicialização do Firebase com as opções padrão
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
     return MultiProvider(
       providers: [
         Provider<AuthStore>(
           create: (_) => AuthStore(),
-        )
+        ),
+        Provider<CalendarioStore>(
+          create: (_) => CalendarioStore(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -47,16 +39,21 @@ class MyApp extends StatelessWidget {
         ),
         home: Builder(
           builder: (context) {
-            // Verifique se há um usuário atualmente autenticado
+            final auth = FirebaseAuth.instance;
             final currentUser = auth.currentUser;
+
+            // Se o usuário estiver autenticado, vá para a tela principal
             if (currentUser != null) {
-              // Se o usuário estiver autenticado, vá para a tela principal
+              final store = Provider.of<AuthStore>(context);
+              // Recupere os dados do usuário após o login automático ser feito
+              store.recuperacaoDados(currentUser.uid);
+              print('Usuário logado: ${currentUser.uid}');
               return const HomePage();
             } else {
+              print('Sem usuario');
               // Se o usuário não estiver autenticado, vá para a tela de login
               return const LoginScreen();
             }
-            return const LoginScreen();
           },
         ),
       ),

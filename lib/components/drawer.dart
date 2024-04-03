@@ -1,10 +1,10 @@
-import 'package:auth_sql/screens/agendamento_page.dart';
+import 'package:auth_sql/screens/agendamento/agendamento_page.dart';
 import 'package:auth_sql/screens/minhaconta_page.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
-
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -52,7 +52,7 @@ class NavigationDrawerWidget extends StatelessWidget {
       break;
     case 1: // Passar listen: false
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Agendamento()));
+          .push(MaterialPageRoute(builder: (context) => AgendamentoPage()));
       break;
   }
 }
