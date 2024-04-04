@@ -10,6 +10,7 @@ class AgendamentoPage extends StatefulWidget {
 }
 
 class _AgendamentoPageState extends State<AgendamentoPage> {
+  
   CalendarFormat _format = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
@@ -17,10 +18,14 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   bool _isWeekend = false;
   bool _dateSelected = false;
   bool _timeSelected = false;
+  String valueConsul = 'Clique aqui para selecionar';
+  String valueExame = 'Clique aqui para selecionar';
+  List<String> listConsultorio= ['Clique aqui para selecionar', 'Consultorio 1', 'Consultorio 2', 'Consultorio 3', 'Consultorio 4'];
+  List<String> listExame = ['Clique aqui para selecionar','Exame 1', 'Exame 2', 'Exame 3', 'Exame 4'];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(  
       appBar: AppBar(
         title: const Text(
           'Agendamento',
@@ -35,17 +40,96 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
           SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
+                  Container(
+                margin: EdgeInsets.only(top: 15),
+                child: Center(
+                    child: Text(
+                      'Selecione o Consultório',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(border: Border.all(color: Colors.green, width: 2), borderRadius: BorderRadius.circular(8)),
+                  child: DropdownButton<String>(
+                    hint: const Text('Selecione o Consultório'),
+                    underline: SizedBox(),
+                    isExpanded: true,
+                    value: valueConsul,
+                    style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold,),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        valueConsul = newValue!;
+                      });
+                    },
+                    items: listConsultorio.map((String valueItem){
+                      return DropdownMenuItem<String>(
+                        value: valueItem, 
+                        child: Text(valueItem),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                margin: EdgeInsets.only(top: 15),
+                child: Center(
+                    child: Text(
+                      'Selecione o tipo de Exame',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(border: Border.all(color: Colors.green, width: 2), borderRadius: BorderRadius.circular(8)),
+                  child: DropdownButton<String>(
+                    hint: const Text('Selecione o Consultório'),
+                    underline: SizedBox(),
+                    isExpanded: true,
+                    value: valueExame,
+                    style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold,),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        valueExame = newValue!;
+                      });
+                    },
+                    items: listExame.map((String valueItem){
+                      return DropdownMenuItem<String>(
+                        value: valueItem, 
+                        child: Text(valueItem),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+                Container(
+                margin: EdgeInsets.only(top: 15),
+                child: Center(
+                    child: Text(
+                      'Selecione o dia da consulta',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                ),
+
                 _tableCalendar(),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                   child: Center(
                     child: Text(
                       'Selecionar horário da consulta',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -102,7 +186,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                 ),
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.all(5),
+              margin: const EdgeInsets.all(10),
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -117,7 +201,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                     : null,
                 child: const Text(
                   "Marcar Consulta",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
               ),
             ),
@@ -129,6 +213,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
 
   Widget _tableCalendar() {
     return TableCalendar(
+      locale: 'pt_BR',
       focusedDay: _focusedDay,
       firstDay: DateTime.now(),
       lastDay: DateTime(2024, 12, 30),

@@ -7,13 +7,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ); // Inicialização do Firebase com as opções padrão
-  runApp(MyApp());
+  );
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
 
             // Se o usuário estiver autenticado, vá para a tela principal
             if (currentUser != null) {
+
               final store = Provider.of<AuthStore>(context);
               // Recupere os dados do usuário após o login automático ser feito
               store.recuperacaoDados(currentUser.uid);

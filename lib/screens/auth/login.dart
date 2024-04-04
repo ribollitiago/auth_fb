@@ -1,4 +1,4 @@
-import 'package:auth_sql/components/auth/textfield_email.dart';
+import 'package:auth_sql/components/auth/texfield_string.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/screens/auth/register.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
@@ -43,54 +43,43 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  //Email field
-                  TextFieldEmail(
-                    email: _emailController.text,
-                  ),
+
+                  //Email Textfield
+                  TextFieldString(
+                      icon: const Icon(Icons.email),
+                      hintText: "Digite seu email",
+                      text: _emailController.text,
+                      shouldValidate: true,
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Digite um e-mail";
+                        }
+                        store.setEmail(text);
+                        return null;
+                      }),
 
                   //Senha field
                   TextFieldPassword(password: _passwordController.text),
 
                   //LOGIN button
                   const SizedBox(height: 10),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width * .9,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.green[500]),
-                    child: TextButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            await store.signInWithEmailPassword(context);
-                          }
-                        },
-                        child: const Text(
-                          "LOGIN",
-                          style: TextStyle(color: Colors.white),
-                        )),
+                  buttonDefault(
+                    context,
+                    () {
+                      if (formKey.currentState!.validate()) {
+                        store.signInWithEmailPassword(context);
+                      }
+                    },
                   ),
 
                   //SigUp Button
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Não possui conta?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Register()));
-                          },
-                          child: const Text(
-                            "Crie Agora",
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        ),
-                      ],
+                  textButtonRegister(
+                    context,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Register(),
+                      ),
                     ),
                   ),
                 ],
@@ -99,6 +88,40 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget textButtonRegister(BuildContext context, VoidCallback? onClick) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Não possui conta?"),
+          TextButton(
+            onPressed: onClick,
+            child: const Text(
+              "Crie Agora",
+              style: TextStyle(color: Colors.green),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buttonDefault(BuildContext context, VoidCallback? onClick) {
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width * .9,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8), color: Colors.green[500]),
+      child: TextButton(
+          onPressed: onClick,
+          child: const Text(
+            "LOGIN",
+            style: TextStyle(color: Colors.white),
+          )),
     );
   }
 }

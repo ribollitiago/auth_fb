@@ -105,7 +105,7 @@ class MinhaConta extends StatelessWidget {
         onPressed: onClick,
         child: Text(
           text,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

@@ -1,14 +1,10 @@
-import 'package:auth_sql/store/default.store.dart';
+import 'package:auth_sql/components/auth/texfield_string.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-import 'package:auth_sql/components/auth/texfield_contrato.dart';
-import 'package:auth_sql/components/auth/texfield_nome.dart';
-import 'package:auth_sql/components/auth/textfield_cpf.dart';
-import 'package:auth_sql/components/auth/textfield_email.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
-import 'package:auth_sql/components/auth/textfield_telefone.dart';
 import 'package:auth_sql/screens/auth/login.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 
@@ -54,26 +50,109 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ),
+
                     //Nome field
-                    TextFieldNome(nome: _nomeController.text),
+                    TextFieldString(
+                        icon: Icon(Icons.person),
+                        hintText: "Digite seu Nome",
+                        text: _nomeController.text,
+                        shouldValidate: true,
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Digite um nome";
+                          }
+                          if (text.length < 6) {
+                            return 'Digite seu nome completo';
+                          }
+                          store.setNome(text);
+                          return null;
+                        }),
 
                     //CPF field
-                    TextFieldCPF(cpf: _cpfController.text),
+                    TextFieldString(
+                        icon: const Icon(Icons.document_scanner),
+                        hintText: "CPF",
+                        text: _cpfController.text,
+                        shouldValidate: true,
+                        validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            // Verifica se contém apenas números
+                            if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+                              return "Digite apenas números";
+                            }
+                            if (text.length != 11) {
+                              return 'Digite um CPF válido';
+                            }
+                            store.setCPF(text);
+                          
+                          return null;
+                        }),
 
                     //Email field
-                    TextFieldEmail(
-                      email: _emailController.text,
+                    TextFieldString(
+                      icon: const Icon(Icons.email),
+                      hintText: "Digite seu email",
+                      text: _emailController.text,
+                      shouldValidate: true,
+                      validator: (text) {
+                        try{
+                        if (text!.isEmpty) {
+                          return "Digite um e-mail";
+                        }
+                        store.setEmail(text);
+                        } on FirebaseAuthException catch (e) {
+                            if (e.code == 'email-already-in-use') {
+                              return 'Email já está em uso.';
+                            }
+                      }
+                      return null;
+                      }
                     ),
 
                     //Telefone field
-                    TextFieldTelefone(
-                      telefone: _telefoneController.text,
+                    TextFieldString(
+                      icon: const Icon(Icons.phone),
+                      hintText: "Telefone",
+                      text: _telefoneController.text,
+                      shouldValidate: true,
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Digite seu Telefone";
+                        }
+                        // Verifica se contém apenas números
+                        if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+                          return "Digite apenas números";
+                        }
+                        if (text.length != 11) {
+                          return "Digite um Telefone válido";
+                        }
+                        store.setTelefone(text);
+                        return null;
+                      },
                     ),
 
                     //Contrato field
-                    TextFieldContrato(
-                      contrato: _contratoController.text,
-                    ),
+                    TextFieldString(
+                        icon: const Icon(Icons.insert_drive_file_rounded),
+                        hintText: "Contrato",
+                        text: _contratoController.text,
+                        shouldValidate: true,
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Digite seu Contrato";
+                          }
+                          // Verifica se contém apenas números
+                          if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+                            return "Digite apenas números";
+                          }
+                          if (text.length != 11) {
+                            return "Digite um Contrato válido";
+                          }
+                          store.setNumContrato(text);
+                          return null;
+                        }),
 
                     //Senha field
                     TextFieldPassword(
