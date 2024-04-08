@@ -1,12 +1,8 @@
-import 'dart:convert';
-
-import 'package:auth_sql/screens/auth/login.dart';
 import 'package:auth_sql/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:http/http.dart' as http;
 
 part 'auth.store.g.dart';
 
@@ -14,101 +10,113 @@ class AuthStore = _AuthStore with _$AuthStore;
 
 abstract class _AuthStore with Store {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  static const _url =
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBlb1hQGuNgpJs0dkTKhAQ-l5YqS3XVM88';
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   @observable
-  User? currentUser;
+  User? _currentUser;
 
   @observable
   bool isVisible = false;
 
   @observable
-  String token = '';
+  String _token = '';
 
   @observable
-  String uidUser = '';
+  String _uidUser = '';
 
   @observable
-  String cpf = '';
+  String _cpf = '';
 
   @observable
-  String nome = '';
+  String _nome = '';
 
   @observable
-  String email = '';
+  String _email = '';
 
   @observable
-  String password = '';
+  String _password = '';
 
   @observable
-  String telefone = '';
+  String _telefone = '';
 
   @observable
-  String numContrato = '';
+  String _numContrato = '';
+
+  @observable
+  String textError = ' ';
+
+  @observable
+  bool isError = false;
 
   //Get funções
   @action
   getEmail() {
-    return email;
+    return _email;
   }
 
   @action
   getNome() {
-    return nome;
+    return _nome;
   }
 
   @action
   getCPF() {
-    return cpf;
+    return _cpf;
   }
 
   @action
   getTelefone() {
-    return telefone;
+    return _telefone;
   }
 
   @action
   getPassword() {
-    return password;
+    return _password;
   }
 
   @action
   usuarioUID() {
-    return uidUser;
+    return _uidUser;
+  }
+
+  getTextError(){
+    return textError;
+  }
+
+  getIsError(){
+    return isError;
   }
 
   //Set funçoes
   @action
   void setCPF(String cpf) {
-    this.cpf = cpf;
+    this._cpf = cpf;
   }
 
   @action
   void setNome(String nome) {
-    this.nome = nome;
+    this._nome = nome;
   }
 
   @action
   void setEmail(String email) {
-    this.email = email;
+    this._email = email;
   }
 
   @action
   void setPassword(String password) {
-    this.password = password;
+    this._password = password;
   }
 
   @action
   void setTelefone(String telefone) {
-    this.telefone = telefone;
+    this._telefone = telefone;
   }
 
   @action
   void setNumContrato(String numContrato) {
-    this.numContrato = numContrato;
+    this._numContrato = numContrato;
   }
 
   //Password field
@@ -122,64 +130,40 @@ abstract class _AuthStore with Store {
   Future<void> signInWithEmailPassword(BuildContext context) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: _email,
+        password: _password,
       );
 
       // Usuário logado com sucesso
       print('Usuário logado com sucesso: ${credential.user!.uid}');
-      uidUser = credential.user!.uid;
-      
+      _uidUser = credential.user!.uid;
+
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
           (route) => false);
 
-      recuperacaoDados(uidUser);
+      textError = ' ';
+      recuperacaoDados(_uidUser);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('Usuário não encontrado para este e-mail.');
-      } else if (e.code == 'wrong-password') {
-        print('Senha incorreta para este usuário.');
+      if (e.code == 'invalid-email') {
+        textError = 'Email não encontrado!';
+        isError = true;
+        print('Email não encontrado');
+
+      } else if (e.code == 'invalid-credential') {
+        textError = 'Email/senha incorretos!';
+        isError = true;
+        print('Email/senha incorretos');
+        
+      } else if (e.code == 'too-many-requests'){
+        textError = 'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
+        isError = true;
+        print('Muitas tentativas de login');
       }
     } catch (e) {
       print('Erro ao fazer login: $e');
-    }
-  }
-
-  @action
-  Future<void> signUpWithEmailPassword(BuildContext context) async {
-    try {
-      final response = await http.post(
-        Uri.parse(_url),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-          'returnSecureToken': true,
-        }),
-      );
-      final responseData = jsonDecode(response.body);
-
-      if (responseData.containsKey('idToken')) {
-        token = responseData['idToken'];
-        uidUser = responseData['localId'];
-
-        await cadastroUsuario();
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (route) => false,
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        print('Email já está em uso.');
-      } else if (e.code == 'weak-password') {
-        print('A senha fornecida é muito fraca.');
-      }
-    } catch (e) {
-      print('Erro durante o registro: $e');
+      print('Tipo de exceção: ${e.runtimeType}');
     }
   }
 
@@ -188,26 +172,7 @@ abstract class _AuthStore with Store {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
-      currentUser = null;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  //Firestore db
-  @action
-  Future<void> cadastroUsuario() async {
-    print("ID do usuario ${uidUser}");
-    try {
-      Map<String, dynamic> usuariosInfoMap = {
-        "ID": uidUser,
-        "Nome": nome,
-        "CPF": cpf,
-        "Email": email,
-        "Telefone": telefone,
-        "Contrato": numContrato,
-      };
-      await addDetalhesUsuarios(usuariosInfoMap, uidUser);
+      _currentUser = null;
     } catch (e) {
       print(e);
     }
@@ -222,16 +187,16 @@ abstract class _AuthStore with Store {
   //Setar dados após login
   @action
   void recuperacaoDados(String currentUser) {
-    uidUser = currentUser;
+    _uidUser = currentUser;
     try {
-      db.collection(uidUser);
-      final docRef = db.collection("Usuarios").doc(uidUser);
+      db.collection(_uidUser);
+      final docRef = db.collection("Usuarios").doc(_uidUser);
       docRef.get().then(
         (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
 
           setNome(data['Nome']);
-          setEmail(data['Email']); 
+          setEmail(data['Email']);
           setCPF(data['CPF']);
           setTelefone(data['Telefone']);
         },

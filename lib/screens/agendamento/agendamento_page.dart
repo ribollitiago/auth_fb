@@ -1,16 +1,16 @@
 import 'package:auth_sql/screens/agendamento/sucess_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AgendamentoPage extends StatefulWidget {
-  const AgendamentoPage({super.key});
+  const AgendamentoPage({Key? key}) : super(key: key);
 
   @override
   State<AgendamentoPage> createState() => _AgendamentoPageState();
 }
 
 class _AgendamentoPageState extends State<AgendamentoPage> {
-  
   CalendarFormat _format = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
@@ -18,14 +18,32 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   bool _isWeekend = false;
   bool _dateSelected = false;
   bool _timeSelected = false;
+  String selectedTime = '';
   String valueConsul = 'Clique aqui para selecionar';
   String valueExame = 'Clique aqui para selecionar';
-  List<String> listConsultorio= ['Clique aqui para selecionar', 'Consultorio 1', 'Consultorio 2', 'Consultorio 3', 'Consultorio 4'];
-  List<String> listExame = ['Clique aqui para selecionar','Exame 1', 'Exame 2', 'Exame 3', 'Exame 4'];
+  List<String> listConsultorio = [
+    'Clique aqui para selecionar',
+    'Consultorio 1',
+    'Consultorio 2',
+    'Consultorio 3',
+    'Consultorio 4'
+  ];
+  List<String> listExame = [
+    'Clique aqui para selecionar',
+    'Exame 1',
+    'Exame 2',
+    'Exame 3',
+    'Exame 4'
+  ];
+  List<String> horarios = List.generate(
+      8, (index) => '${index + 9}:00 ${index + 9 > 11 ? "PM" : "AM"}');
+
+  DateTime? _selectedDate; // Variável para armazenar o dia selecionado
+  String? formattedDate;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(  
+    return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Agendamento',
@@ -40,9 +58,9 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
           SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
-                  Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Center(
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: const Center(
                     child: Text(
                       'Selecione o Consultório',
                       style:
@@ -53,29 +71,35 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                 Container(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(border: Border.all(color: Colors.green, width: 2), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.green, width: 2),
+                      borderRadius: BorderRadius.circular(8)),
                   child: DropdownButton<String>(
                     hint: const Text('Selecione o Consultório'),
                     underline: SizedBox(),
                     isExpanded: true,
                     value: valueConsul,
-                    style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                     onChanged: (String? newValue) {
                       setState(() {
                         valueConsul = newValue!;
                       });
                     },
-                    items: listConsultorio.map((String valueItem){
+                    items: listConsultorio.map((String valueItem) {
                       return DropdownMenuItem<String>(
-                        value: valueItem, 
+                        value: valueItem,
                         child: Text(valueItem),
                       );
                     }).toList(),
                   ),
                 ),
                 Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Center(
+                  margin: EdgeInsets.only(top: 15),
+                  child: const Center(
                     child: Text(
                       'Selecione o tipo de Exame',
                       style:
@@ -83,34 +107,38 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                     ),
                   ),
                 ),
-
                 Container(
-                  padding: EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(border: Border.all(color: Colors.green, width: 2), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.green, width: 2),
+                      borderRadius: BorderRadius.circular(8)),
                   child: DropdownButton<String>(
                     hint: const Text('Selecione o Consultório'),
                     underline: SizedBox(),
                     isExpanded: true,
                     value: valueExame,
-                    style: const TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                     onChanged: (String? newValue) {
                       setState(() {
                         valueExame = newValue!;
                       });
                     },
-                    items: listExame.map((String valueItem){
+                    items: listExame.map((String valueItem) {
                       return DropdownMenuItem<String>(
-                        value: valueItem, 
+                        value: valueItem,
                         child: Text(valueItem),
                       );
                     }).toList(),
                   ),
                 ),
-
                 Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Center(
+                  margin: EdgeInsets.only(top: 15),
+                  child: const Center(
                     child: Text(
                       'Selecione o dia da consulta',
                       style:
@@ -118,7 +146,6 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                     ),
                   ),
                 ),
-
                 _tableCalendar(),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -155,6 +182,9 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                             _currentIndex = index;
                             _timeSelected = true;
                           });
+                          // Passar o horário correspondente quando o botão for pressionado
+                          selectedTime = horarios[index];
+                          print('Horário selecionado: $selectedTime');
                         },
                         child: Container(
                           margin: const EdgeInsets.all(5),
@@ -169,7 +199,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            '${index + 9}:00 ${index + 9 > 11 ? "PM" : "AM"}',
+                            horarios[index],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color:
@@ -193,10 +223,47 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                 color: Colors.green[500],
               ),
               child: TextButton(
-                onPressed: _timeSelected && _dateSelected
+                onPressed: _timeSelected &&
+                        _dateSelected &&
+                        valueConsul != 'Clique aqui para selecionar' &&
+                        valueExame != 'Clique aqui para selecionar'
                     ? () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const SucessPage()));
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Confirmar Agendamento'),
+                              content: Text(
+                                  'Gostaria de agendar ${valueExame} no consultório ${valueConsul} no dia ${formattedDate} no horario ${selectedTime}'),
+                              actions: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    botaoPadrao(
+                                      text: 'SIM',
+                                      onClick: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SucessPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    botaoPadrao(
+                                      text: 'NÃO',
+                                      onClick: () {
+                                        Navigator.pop(
+                                            context); // Fechar o AlertDialog
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     : null,
                 child: const Text(
@@ -237,6 +304,11 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
           _currentDay = selectedDay;
           _focusedDay = focusedDay;
           _dateSelected = true;
+          _selectedDate =
+              selectedDay; // Atualiza a variável com o dia selecionado
+
+          formattedDate = DateFormat('dd/MM/yyyy').format(selectedDay);
+          print(formattedDate); // Imprime a data formatada
 
           if (selectedDay.weekday == 6 || selectedDay.weekday == 7) {
             _isWeekend = true;
@@ -247,6 +319,24 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
           }
         });
       }),
+    );
+  }
+
+  Widget botaoPadrao({required String text, VoidCallback? onClick}) {
+    return Container(
+      height: 40,
+      width: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.green[500],
+      ),
+      child: TextButton(
+        onPressed: onClick,
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 }

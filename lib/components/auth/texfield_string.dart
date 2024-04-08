@@ -10,22 +10,21 @@ class TextFieldString extends StatelessWidget {
       validator; // Alterado para o tipo de função correto
 
   const TextFieldString({
-    Key? key, // Corrigido para declarar corretamente a chave
+    Key? key,
     required this.icon,
     required this.hintText,
     required this.text,
-    required this.shouldValidate, // Adicionada a nova variável shouldValidate
-    required this.validator, // Corrigido o tipo de dados do validator
+    required this.shouldValidate,
+    required this.validator, 
   }) : super(
             key:
-                key); // Incluído o super() para passar a chave para a superclasse
+                key);
 
   @override
   Widget build(BuildContext context) {
     TextEditingController _textController = TextEditingController(text: text);
 
     return Container(
-      margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

@@ -96,7 +96,7 @@ class MinhaConta extends StatelessWidget {
   Widget botaoPadrao({required String text, VoidCallback? onClick}) {
     return Container(
       height: 40,
-      width: 90,
+      width: 105,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.green[500],
