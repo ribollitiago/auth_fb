@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendario.store.dart';
+part of 'calendar.store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'calendario.store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$CalendarioStore on _CalendarioStore, Store {
+mixin _$CalendarStore on _CalendarStore, Store {
   late final _$appointmentsAtom =
-      Atom(name: '_CalendarioStore.appointments', context: context);
+      Atom(name: '_CalendarStore.appointments', context: context);
 
   @override
   ObservableList<DateTime> get appointments {
@@ -26,7 +26,7 @@ mixin _$CalendarioStore on _CalendarioStore, Store {
   }
 
   late final _$fetchAppointmentsAsyncAction =
-      AsyncAction('_CalendarioStore.fetchAppointments', context: context);
+      AsyncAction('_CalendarStore.fetchAppointments', context: context);
 
   @override
   Future<void> fetchAppointments() {
@@ -34,7 +34,7 @@ mixin _$CalendarioStore on _CalendarioStore, Store {
   }
 
   late final _$addAppointmentAsyncAction =
-      AsyncAction('_CalendarioStore.addAppointment', context: context);
+      AsyncAction('_CalendarStore.addAppointment', context: context);
 
   @override
   Future<void> addAppointment(DateTime date) {

@@ -15,7 +15,7 @@ class TextFieldPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     final store = Provider.of<AuthStore>(context);
 
-    TextEditingController passwordController =
+    TextEditingController _passwordController =
         TextEditingController(text: password);
 
     return Container(
@@ -25,7 +25,7 @@ class TextFieldPassword extends StatelessWidget {
             color: Colors.green[500]?.withOpacity(.3)),
         child: Observer(
           builder: (_) => TextFormField(
-            controller: passwordController,
+            controller: _passwordController,
             validator:  shouldValidate
             ? validator
             : null, 

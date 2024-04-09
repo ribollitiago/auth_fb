@@ -26,28 +26,28 @@ abstract class _AuthStore with Store {
   String _uidUser = '';
 
   @observable
+  String _email = '';
+
+  @observable
+  String _name = '';
+
+  @observable
   String _cpf = '';
 
   @observable
-  String _nome = '';
+  String _phone = '';
 
   @observable
-  String _email = '';
+  String _numContract = '';
 
   @observable
   String _password = '';
 
   @observable
-  String _telefone = '';
+  String _textError = ' ';
 
   @observable
-  String _numContrato = '';
-
-  @observable
-  String textError = ' ';
-
-  @observable
-  bool isError = false;
+  bool _isError = false;
 
   //Get funções
   @action
@@ -56,8 +56,8 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  getNome() {
-    return _nome;
+  getName() {
+    return _name;
   }
 
   @action
@@ -66,8 +66,13 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  getTelefone() {
-    return _telefone;
+  getPhone() {
+    return _phone;
+  }
+
+  @action
+  getContract(){
+    return _numContract;
   }
 
   @action
@@ -81,42 +86,42 @@ abstract class _AuthStore with Store {
   }
 
   getTextError(){
-    return textError;
+    return _textError;
   }
 
   getIsError(){
-    return isError;
+    return _isError;
   }
 
   //Set funçoes
+    @action
+  void setEmail(String email) {
+    _email = email;
+  }
+
+  @action
+  void setName(String name) {
+    _name = name;
+  }
+
   @action
   void setCPF(String cpf) {
-    this._cpf = cpf;
+    _cpf = cpf;
   }
 
   @action
-  void setNome(String nome) {
-    this._nome = nome;
+  void setPhone(String phone) {
+    _phone = phone;
   }
 
   @action
-  void setEmail(String email) {
-    this._email = email;
+  void setNumContract(String numContract) {
+    _numContract = numContract;
   }
 
   @action
   void setPassword(String password) {
-    this._password = password;
-  }
-
-  @action
-  void setTelefone(String telefone) {
-    this._telefone = telefone;
-  }
-
-  @action
-  void setNumContrato(String numContrato) {
-    this._numContrato = numContrato;
+    _password = password;
   }
 
   //Password field
@@ -143,22 +148,24 @@ abstract class _AuthStore with Store {
           MaterialPageRoute(builder: (context) => const HomePage()),
           (route) => false);
 
-      textError = ' ';
-      recuperacaoDados(_uidUser);
+      _textError = ' ';
+      dataRecovery(_uidUser);
+      
+      _password = ' ';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
-        textError = 'Email não encontrado!';
-        isError = true;
+        _textError = 'Email não encontrado!';
+        _isError = true;
         print('Email não encontrado');
 
       } else if (e.code == 'invalid-credential') {
-        textError = 'Email/senha incorretos!';
-        isError = true;
+        _textError = 'Email/senha incorretos!';
+        _isError = true;
         print('Email/senha incorretos');
         
       } else if (e.code == 'too-many-requests'){
-        textError = 'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
-        isError = true;
+        _textError = 'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
+        _isError = true;
         print('Muitas tentativas de login');
       }
     } catch (e) {
@@ -178,15 +185,9 @@ abstract class _AuthStore with Store {
     }
   }
 
-  @action
-  Future addDetalhesUsuarios(
-      Map<String, dynamic> usuariosMap, String id) async {
-    return await db.collection("Usuarios").doc(id).set(usuariosMap);
-  }
-
   //Setar dados após login
   @action
-  void recuperacaoDados(String currentUser) {
+  void dataRecovery(String currentUser) {
     _uidUser = currentUser;
     try {
       db.collection(_uidUser);
@@ -195,10 +196,11 @@ abstract class _AuthStore with Store {
         (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
 
-          setNome(data['Nome']);
+          setName(data['Nome']);
           setEmail(data['Email']);
           setCPF(data['CPF']);
-          setTelefone(data['Telefone']);
+          setPhone(data['Telefone']);
+          setNumContract(data['Contrato']);
         },
         onError: (e) => print("Error getting document: $e"),
       );

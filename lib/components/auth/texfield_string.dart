@@ -5,9 +5,9 @@ class TextFieldString extends StatelessWidget {
   final String hintText;
   final Icon icon;
   final bool
-      shouldValidate; // Nova variável para controlar se o validador deve ser chamado ou não
+      shouldValidate; 
   final String? Function(String?)?
-      validator; // Alterado para o tipo de função correto
+      validator;
 
   const TextFieldString({
     Key? key,
@@ -34,7 +34,7 @@ class TextFieldString extends StatelessWidget {
         initialValue: _textController.text,
         validator: shouldValidate
             ? validator
-            : null, // Chama o validador apenas se shouldValidate for verdadeiro
+            : null, 
         decoration: InputDecoration(
           icon: icon,
           border: InputBorder.none,

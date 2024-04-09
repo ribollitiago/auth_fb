@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         "Entrar na sua conta",
                         style: TextStyle(
                             fontSize: 45, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                       ),
                     ),
 
@@ -62,15 +62,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
 
                     //Senha field
-                    TextFieldPassword(password: _passwordController.text, shouldValidate: true, validator: (value) {
-              if (value!.isEmpty) {
-                return "Digite uma senha";
-              } else if (value.length < 6) {
-                return "Digite uma senha maior";
-              }
-              store.setPassword(value);
-              return null;
-            },),
+                    TextFieldPassword(
+                      password: _passwordController.text,
+                      shouldValidate: true,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Digite uma senha";
+                        } else if (value.length < 6) {
+                          return "Digite uma senha maior";
+                        }
+                        store.setPassword(value);
+                        return null;
+                      },
+                    ),
                     //LOGIN button
                     const SizedBox(height: 10),
                     buttonDefault(
@@ -82,12 +86,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
 
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Text(
-                        store.textError,
-                        style: TextStyle(color: Colors.red, ),
+                        store.getTextError(),
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),

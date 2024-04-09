@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:auth_sql/screens/agendamento/agendamento_page.dart';
-import 'package:auth_sql/screens/minhaconta_page.dart';
+import 'package:auth_sql/screens/schedule/schedule_page.dart';
+import 'package:auth_sql/screens/account_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
       leading: IconButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const MinhaConta()));
+              MaterialPageRoute(builder: (context) => const AccountPage()));
         },
         icon: const Icon(
           Icons.person,

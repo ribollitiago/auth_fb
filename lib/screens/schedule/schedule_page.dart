@@ -1,4 +1,4 @@
-import 'package:auth_sql/screens/agendamento/sucess_page.dart';
+import 'package:auth_sql/screens/schedule/sucess_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';

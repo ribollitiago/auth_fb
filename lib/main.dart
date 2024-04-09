@@ -1,7 +1,7 @@
 import 'package:auth_sql/screens/auth/login.dart';
 import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
-import 'package:auth_sql/store/calendar/calendario.store.dart';
+import 'package:auth_sql/store/calendar/calendar.store.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         Provider<AuthStore>(
           create: (_) => AuthStore(),
         ),
-        Provider<CalendarioStore>(
-          create: (_) => CalendarioStore(),
+        Provider<CalendarStore>(
+          create: (_) => CalendarStore(),
         ),
       ],
       child: MaterialApp(
@@ -43,17 +43,14 @@ class MyApp extends StatelessWidget {
             final auth = FirebaseAuth.instance;
             final currentUser = auth.currentUser;
 
-            // Se o usuário estiver autenticado, vá para a tela principal
             if (currentUser != null) {
-
               final store = Provider.of<AuthStore>(context);
-              // Recupere os dados do usuário após o login automático ser feito
-              store.recuperacaoDados(currentUser.uid);
+
+              store.dataRecovery(currentUser.uid);
               print('Usuário logado: ${currentUser.uid}');
               return const HomePage();
             } else {
               print('Sem usuario');
-              // Se o usuário não estiver autenticado, vá para a tela de login
               return const LoginScreen();
             }
           },

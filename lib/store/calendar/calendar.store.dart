@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
-part 'calendario.store.g.dart';
+part 'calendar.store.g.dart';
 
-class CalendarioStore = _CalendarioStore with _$CalendarioStore;
+class CalendarStore = _CalendarStore with _$CalendarStore;
 
-abstract class _CalendarioStore with Store {
+abstract class _CalendarStore with Store {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   @observable
