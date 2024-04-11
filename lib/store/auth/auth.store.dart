@@ -167,6 +167,11 @@ abstract class _AuthStore with Store {
         _textError = 'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
         _isError = true;
         print('Muitas tentativas de login');
+        
+      } else if (e.code == 'user-disabled') {
+        _textError =
+            'Essa conta está desativada, por favor entre em contato com o suporte.';
+        _isError = true;
       }
     } catch (e) {
       print('Erro ao fazer login: $e');

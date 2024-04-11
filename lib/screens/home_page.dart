@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const AgendamentoPage()));
+                          builder: (context) => const SchedulePage()));
                     },
                     style: ElevatedButton.styleFrom(
                       side: const BorderSide(color: Colors.white, width: 2),

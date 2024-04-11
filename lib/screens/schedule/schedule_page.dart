@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AgendamentoPage extends StatefulWidget {
-  const AgendamentoPage({Key? key}) : super(key: key);
+class SchedulePage extends StatefulWidget {
+  const SchedulePage({Key? key}) : super(key: key);
 
   @override
-  State<AgendamentoPage> createState() => _AgendamentoPageState();
+  State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _AgendamentoPageState extends State<AgendamentoPage> {
+class _SchedulePageState extends State<SchedulePage> {
   CalendarFormat _format = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
@@ -21,6 +21,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   String selectedTime = '';
   String valueConsul = 'Clique aqui para selecionar';
   String valueExame = 'Clique aqui para selecionar';
+
   List<String> listConsultorio = [
     'Clique aqui para selecionar',
     'Consultorio 1',
@@ -28,6 +29,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     'Consultorio 3',
     'Consultorio 4'
   ];
+
   List<String> listExame = [
     'Clique aqui para selecionar',
     'Exame 1',
@@ -35,6 +37,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     'Exame 3',
     'Exame 4'
   ];
+
   List<String> horarios = List.generate(
       8, (index) => '${index + 9}:00 ${index + 9 > 11 ? "PM" : "AM"}');
 
@@ -243,12 +246,12 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                     botaoPadrao(
                                       text: 'SIM',
                                       onClick: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SucessPage(),
-                                          ),
-                                        );
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SucessPage()),
+                                            (route) => false);
                                       },
                                     ),
                                     botaoPadrao(
