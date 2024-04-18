@@ -41,6 +41,38 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$_isErrorAtom =
+      Atom(name: '_AuthStore._isError', context: context);
+
+  @override
+  bool get _isError {
+    _$_isErrorAtom.reportRead();
+    return super._isError;
+  }
+
+  @override
+  set _isError(bool value) {
+    _$_isErrorAtom.reportWrite(value, super._isError, () {
+      super._isError = value;
+    });
+  }
+
+  late final _$_textErrorAtom =
+      Atom(name: '_AuthStore._textError', context: context);
+
+  @override
+  String get _textError {
+    _$_textErrorAtom.reportRead();
+    return super._textError;
+  }
+
+  @override
+  set _textError(String value) {
+    _$_textErrorAtom.reportWrite(value, super._textError, () {
+      super._textError = value;
+    });
+  }
+
   late final _$_tokenAtom = Atom(name: '_AuthStore._token', context: context);
 
   @override
@@ -164,38 +196,6 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
-  late final _$_textErrorAtom =
-      Atom(name: '_AuthStore._textError', context: context);
-
-  @override
-  String get _textError {
-    _$_textErrorAtom.reportRead();
-    return super._textError;
-  }
-
-  @override
-  set _textError(String value) {
-    _$_textErrorAtom.reportWrite(value, super._textError, () {
-      super._textError = value;
-    });
-  }
-
-  late final _$_isErrorAtom =
-      Atom(name: '_AuthStore._isError', context: context);
-
-  @override
-  bool get _isError {
-    _$_isErrorAtom.reportRead();
-    return super._isError;
-  }
-
-  @override
-  set _isError(bool value) {
-    _$_isErrorAtom.reportWrite(value, super._isError, () {
-      super._isError = value;
-    });
-  }
-
   late final _$signInWithEmailPasswordAsyncAction =
       AsyncAction('_AuthStore.signInWithEmailPassword', context: context);
 
@@ -211,6 +211,14 @@ mixin _$AuthStore on _AuthStore, Store {
   @override
   Future<void> signOut() {
     return _$signOutAsyncAction.run(() => super.signOut());
+  }
+
+  late final _$recoveryDataAsyncAction =
+      AsyncAction('_AuthStore.recoveryData', context: context);
+
+  @override
+  Future<void> recoveryData(String currentUser) {
+    return _$recoveryDataAsyncAction.run(() => super.recoveryData(currentUser));
   }
 
   late final _$_AuthStoreActionController =
@@ -365,17 +373,6 @@ mixin _$AuthStore on _AuthStore, Store {
         _$_AuthStoreActionController.startAction(name: '_AuthStore.visible');
     try {
       return super.visible();
-    } finally {
-      _$_AuthStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void dataRecovery(String currentUser) {
-    final _$actionInfo = _$_AuthStoreActionController.startAction(
-        name: '_AuthStore.dataRecovery');
-    try {
-      return super.dataRecovery(currentUser);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }

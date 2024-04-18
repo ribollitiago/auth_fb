@@ -1,15 +1,89 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 part 'calendar.store.g.dart';
 
 class CalendarStore = _CalendarStore with _$CalendarStore;
 
 abstract class _CalendarStore with Store {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  late http.Response rsp;
 
   @observable
   ObservableList<DateTime> appointments = ObservableList<DateTime>();
+
+  @observable
+  List<String> partnerNames = [];
+
+  @action
+  List<String> getPartnerNames() {
+    return partnerNames;
+  }
+
+  // Função para imprimir todos os dados da coleção 'Parceiros' e recuperar os nomes
+  void retrievePartnerNames() async {
+    try {
+      final partnerCollection = _db.collection("Parceiros");
+      final snapshot = await partnerCollection.get();
+
+      // Limpar a lista de nomes dos parceiros antes de preenchê-la
+      partnerNames.clear();
+
+      var index = 0;
+      while (index < snapshot.docs.length) {
+        final doc = snapshot.docs[index];
+        final data = doc.data();
+        final name = data['Nome'];
+        if (name != null) {
+          partnerNames.add(name);
+        }
+        index++;
+      }
+    } catch (e) {
+      print('Erro ao buscar os dados dos parceiros: $e');
+    }
+  }
+
+  void retrieveExam(String exam) async {
+  try {
+    final partnerCollection = _db.collection("Parceiros");
+    final snapshot = await partnerCollection.get();
+
+    var index = 0;
+    while (index < snapshot.docs.length) {
+      final doc = snapshot.docs[index];
+      final data = doc.data();
+      final name = data['Nome'];
+
+      if (exam == name) {
+        
+        final examCollection = doc.reference.collection('Exames');
+
+        final examSnapshot = await examCollection.get();
+        List<String> exams = [];
+
+        examSnapshot.docs.forEach((examDoc) {
+          
+          final examMap = examDoc.data();
+          
+          exams.addAll(examMap.values.whereType<String>());
+        });
+
+        print('Exames do parceiro $exam: $exams');
+        return;
+      }
+
+      index++;
+    }
+
+    print('Parceiro $exam não encontrado ou não possui exames');
+  } catch (e) {
+    print('Erro ao buscar os exames: $e');
+  }
+}
 
   @action
   Future<void> fetchAppointments() async {

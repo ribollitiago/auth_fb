@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             if (currentUser != null) {
               final store = Provider.of<AuthStore>(context);
 
-              store.dataRecovery(currentUser.uid);
+              store.recoveryData(currentUser.uid);
               print('Usuário logado: ${currentUser.uid}');
               return const HomePage();
             } else {

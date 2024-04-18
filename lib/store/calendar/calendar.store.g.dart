@@ -25,6 +25,22 @@ mixin _$CalendarStore on _CalendarStore, Store {
     });
   }
 
+  late final _$partnerNamesAtom =
+      Atom(name: '_CalendarStore.partnerNames', context: context);
+
+  @override
+  List<String> get partnerNames {
+    _$partnerNamesAtom.reportRead();
+    return super.partnerNames;
+  }
+
+  @override
+  set partnerNames(List<String> value) {
+    _$partnerNamesAtom.reportWrite(value, super.partnerNames, () {
+      super.partnerNames = value;
+    });
+  }
+
   late final _$fetchAppointmentsAsyncAction =
       AsyncAction('_CalendarStore.fetchAppointments', context: context);
 
@@ -41,10 +57,25 @@ mixin _$CalendarStore on _CalendarStore, Store {
     return _$addAppointmentAsyncAction.run(() => super.addAppointment(date));
   }
 
+  late final _$_CalendarStoreActionController =
+      ActionController(name: '_CalendarStore', context: context);
+
+  @override
+  List<String> getPartnerNames() {
+    final _$actionInfo = _$_CalendarStoreActionController.startAction(
+        name: '_CalendarStore.getPartnerNames');
+    try {
+      return super.getPartnerNames();
+    } finally {
+      _$_CalendarStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-appointments: ${appointments}
+appointments: ${appointments},
+partnerNames: ${partnerNames}
     ''';
   }
 }

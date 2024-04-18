@@ -1,6 +1,8 @@
 import 'package:auth_sql/screens/schedule/sucess_page.dart';
+import 'package:auth_sql/store/calendar/calendar.store.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -19,17 +21,11 @@ class _SchedulePageState extends State<SchedulePage> {
   bool _dateSelected = false;
   bool _timeSelected = false;
   String selectedTime = '';
-  String valueConsul = 'Clique aqui para selecionar';
+
   String valueExame = 'Clique aqui para selecionar';
+  String valueConsul = '';
 
-  List<String> listConsultorio = [
-    'Clique aqui para selecionar',
-    'Consultorio 1',
-    'Consultorio 2',
-    'Consultorio 3',
-    'Consultorio 4'
-  ];
-
+  List<String> listConsultorio = [];
   List<String> listExame = [
     'Clique aqui para selecionar',
     'Exame 1',
@@ -37,12 +33,31 @@ class _SchedulePageState extends State<SchedulePage> {
     'Exame 3',
     'Exame 4'
   ];
-
   List<String> horarios = List.generate(
       8, (index) => '${index + 9}:00 ${index + 9 > 11 ? "PM" : "AM"}');
 
-  DateTime? _selectedDate; // Variável para armazenar o dia selecionado
+  DateTime? _selectedDate;
   String? formattedDate;
+
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDataWithDelay();
+  }
+
+  Future<void> _fetchDataWithDelay() async {
+    await Future.delayed(Duration(seconds: 1)); // Simulando um carregamento de 1 segundo
+
+    final store = Provider.of<CalendarStore>(context, listen: false);
+    listConsultorio = await store.getPartnerNames().toSet().toList();
+    setState(() {
+      valueConsul = listConsultorio.isNotEmpty ? listConsultorio.first : '';
+      store.retrieveExam(valueConsul);
+      _isLoading = false; // Indica que a busca de dados foi concluída
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,223 +71,141 @@ class _SchedulePageState extends State<SchedulePage> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: const Center(
-                    child: Text(
-                      'Selecione o Consultório',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green, width: 2),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: DropdownButton<String>(
-                    hint: const Text('Selecione o Consultório'),
-                    underline: SizedBox(),
-                    isExpanded: true,
-                    value: valueConsul,
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        valueConsul = newValue!;
-                      });
-                    },
-                    items: listConsultorio.map((String valueItem) {
-                      return DropdownMenuItem<String>(
-                        value: valueItem,
-                        child: Text(valueItem),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: const Center(
-                    child: Text(
-                      'Selecione o tipo de Exame',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green, width: 2),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: DropdownButton<String>(
-                    hint: const Text('Selecione o Consultório'),
-                    underline: SizedBox(),
-                    isExpanded: true,
-                    value: valueExame,
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        valueExame = newValue!;
-                      });
-                    },
-                    items: listExame.map((String valueItem) {
-                      return DropdownMenuItem<String>(
-                        value: valueItem,
-                        child: Text(valueItem),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: const Center(
-                    child: Text(
-                      'Selecione o dia da consulta',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                ),
-                _tableCalendar(),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Center(
-                    child: Text(
-                      'Selecionar horário da consulta',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
+      body: _isLoading ? _buildLoading() : _buildBody(),
+    );
+  }
+
+  Widget _buildLoading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildBody() {
+    return CustomScrollView(
+      slivers: [
+        _buildConsultorioSelection(),
+        _buildExameSelection(),
+        _buildDaySelection(),
+        _buildHorarioSelection(),
+        _buildMarcarConsultaButton(),
+      ],
+    );
+  }
+
+  Widget _buildConsultorioSelection() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            child: const Center(
+              child: Text(
+                'Selecione o Consultório',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
           ),
-          _isWeekend
-              ? SliverToBoxAdapter(
-                  child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Fim de semana não disponível, selecione outra data',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.grey),
-                  ),
-                ))
-              : SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return InkWell(
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          setState(() {
-                            _currentIndex = index;
-                            _timeSelected = true;
-                          });
-                          // Passar o horário correspondente quando o botão for pressionado
-                          selectedTime = horarios[index];
-                          print('Horário selecionado: $selectedTime');
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _currentIndex == index
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                            color: _currentIndex == index ? Colors.green : null,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            horarios[index],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  _currentIndex == index ? Colors.white : null,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: 8,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4, childAspectRatio: 1.5),
-                ),
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.green[500],
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.green, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButton<String>(
+              hint: const Text('Selecione o Consultório'),
+              underline: SizedBox(),
+              isExpanded: true,
+              style: const TextStyle(
+                color: Colors.green,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              child: TextButton(
-                onPressed: _timeSelected &&
-                        _dateSelected &&
-                        valueConsul != 'Clique aqui para selecionar' &&
-                        valueExame != 'Clique aqui para selecionar'
-                    ? () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Confirmar Agendamento'),
-                              content: Text(
-                                  'Gostaria de agendar ${valueExame} no consultório ${valueConsul} no dia ${formattedDate} no horario ${selectedTime}'),
-                              actions: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    botaoPadrao(
-                                      text: 'SIM',
-                                      onClick: () {
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SucessPage()),
-                                            (route) => false);
-                                      },
-                                    ),
-                                    botaoPadrao(
-                                      text: 'NÃO',
-                                      onClick: () {
-                                        Navigator.pop(
-                                            context); // Fechar o AlertDialog
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    : null,
-                child: const Text(
-                  "Marcar Consulta",
-                  style: TextStyle(color: Colors.white, fontSize: 17),
-                ),
+              value: valueConsul,
+              onChanged: (String? newValue) {
+                setState(() {
+                  valueConsul = newValue!;
+                });
+              },
+              items: listConsultorio.map((String valueItem) {
+                return DropdownMenuItem<String>(
+                  value: valueItem,
+                  child: Text(valueItem),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExameSelection() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            child: const Center(
+              child: Text(
+                'Selecione o tipo de Exame',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.green, width: 2),
+                borderRadius: BorderRadius.circular(8)),
+            child: DropdownButton<String>(
+              hint: const Text('Selecione o Exame'),
+              underline: SizedBox(),
+              isExpanded: true,
+              style: const TextStyle(
+                color: Colors.green,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              value: valueExame,
+              onChanged: (String? newValue) {
+                setState(() {
+                  valueExame = newValue!;
+                });
+              },
+              items: listExame.map((String valueItem) {
+                return DropdownMenuItem<String>(
+                  value: valueItem,
+                  child: Text(valueItem),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDaySelection() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            child: const Center(
+              child: Text(
+                'Selecione o dia da consulta',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ),
+          ),
+          _tableCalendar(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            child: Center(
+              child: Text(
+                'Selecionar horário da consulta',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
           ),
@@ -307,12 +240,9 @@ class _SchedulePageState extends State<SchedulePage> {
           _currentDay = selectedDay;
           _focusedDay = focusedDay;
           _dateSelected = true;
-          _selectedDate =
-              selectedDay; // Atualiza a variável com o dia selecionado
-
+          _selectedDate = selectedDay;
           formattedDate = DateFormat('dd/MM/yyyy').format(selectedDay);
-          print(formattedDate); // Imprime a data formatada
-
+          print(formattedDate);
           if (selectedDay.weekday == 6 || selectedDay.weekday == 7) {
             _isWeekend = true;
             _timeSelected = false;
@@ -322,6 +252,119 @@ class _SchedulePageState extends State<SchedulePage> {
           }
         });
       }),
+    );
+  }
+
+  Widget _buildHorarioSelection() {
+    return _isWeekend
+        ? SliverToBoxAdapter(
+            child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+            alignment: Alignment.center,
+            child: const Text(
+              'Fim de semana não disponível, selecione outra data',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+            ),
+          ))
+        : SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = index;
+                      _timeSelected = true;
+                    });
+                    selectedTime = horarios[index];
+                    print('Horário selecionado: $selectedTime');
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _currentIndex == index
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      color: _currentIndex == index ? Colors.green : null,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      horarios[index],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: _currentIndex == index ? Colors.white : null,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: 8,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, childAspectRatio: 1.5),
+          );
+  }
+
+  Widget _buildMarcarConsultaButton() {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.green[500],
+        ),
+        child: TextButton(
+          onPressed: _timeSelected &&
+                  _dateSelected &&
+                  valueExame != 'Clique aqui para selecionar'
+              ? () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Confirmar Agendamento'),
+                        content: Text(
+                            'Gostaria de agendar ${valueExame} no consultório ${valueConsul} no dia ${formattedDate} no horario ${selectedTime}'),
+                        actions: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              botaoPadrao(
+                                text: 'SIM',
+                                onClick: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SucessPage()),
+                                      (route) => false);
+                                },
+                              ),
+                              botaoPadrao(
+                                text: 'NÃO',
+                                onClick: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              : null,
+          child: const Text(
+            "Marcar Consulta",
+            style: TextStyle(color: Colors.white, fontSize: 17),
+          ),
+        ),
+      ),
     );
   }
 

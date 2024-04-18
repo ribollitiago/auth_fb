@@ -1,6 +1,8 @@
+import 'package:auth_sql/store/calendar/calendar.store.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_sql/screens/schedule/schedule_page.dart';
 import 'package:auth_sql/screens/account_page.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +26,7 @@ class HomePage extends StatelessWidget {
 
   SliverAppBar AppBarWidget(
       {required String title, required BuildContext context}) {
+    final store = Provider.of<CalendarStore>(context);
     return SliverAppBar(
       title: Text(
         title,
@@ -77,6 +80,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      store.retrievePartnerNames();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const SchedulePage()));
                     },

@@ -19,6 +19,13 @@ abstract class _AuthStore with Store {
   @observable
   bool isVisible = false;
 
+  //Errors
+  @observable
+  bool _isError = false;
+
+  @observable
+  String _textError = '';
+
   @observable
   String _token = '';
 
@@ -43,12 +50,6 @@ abstract class _AuthStore with Store {
   @observable
   String _password = '';
 
-  @observable
-  String _textError = ' ';
-
-  @observable
-  bool _isError = false;
-
   //Get funções
   @action
   getEmail() {
@@ -71,7 +72,7 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  getContract(){
+  getContract() {
     return _numContract;
   }
 
@@ -85,16 +86,17 @@ abstract class _AuthStore with Store {
     return _uidUser;
   }
 
-  getTextError(){
+  getTextError() {
     return _textError;
   }
 
-  getIsError(){
+  getIsError() {
     return _isError;
   }
 
+
   //Set funçoes
-    @action
+  @action
   void setEmail(String email) {
     _email = email;
   }
@@ -143,31 +145,31 @@ abstract class _AuthStore with Store {
       print('Usuário logado com sucesso: ${credential.user!.uid}');
       _uidUser = credential.user!.uid;
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-          (route) => false);
+      await recoveryData(_uidUser);
+      _password = '';
 
-      _textError = ' ';
-      dataRecovery(_uidUser);
-      
-      _password = ' ';
+      if (!_isError) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (route) => false);
+
+        _textError = '';
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         _textError = 'Email não encontrado!';
         _isError = true;
         print('Email não encontrado');
-
       } else if (e.code == 'invalid-credential') {
         _textError = 'Email/senha incorretos!';
         _isError = true;
         print('Email/senha incorretos');
-        
-      } else if (e.code == 'too-many-requests'){
-        _textError = 'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
+      } else if (e.code == 'too-many-requests') {
+        _textError =
+            'Acesso a esta conta foi temporariamente desativado devido a muitas tentativas de login.';
         _isError = true;
         print('Muitas tentativas de login');
-        
       } else if (e.code == 'user-disabled') {
         _textError =
             'Essa conta está desativada, por favor entre em contato com o suporte.';
@@ -192,25 +194,53 @@ abstract class _AuthStore with Store {
 
   //Setar dados após login
   @action
-  void dataRecovery(String currentUser) {
-    _uidUser = currentUser;
-    try {
-      db.collection(_uidUser);
-      final docRef = db.collection("Usuarios").doc(_uidUser);
-      docRef.get().then(
-        (DocumentSnapshot doc) {
-          final data = doc.data() as Map<String, dynamic>;
+Future<void> recoveryData(String currentUser) async {
+  try {
+    _textError = '';
+    _isError = false;
+    final userCollection = db.collection("Funcionarios");
+    final userDoc = await userCollection.doc(currentUser).get();
+    
+    if (userDoc.exists) {
+      _textError = 'Você não tem permissão';
+      _isError = true;
+      // Limpar os dados do usuário
+      restoreData();
+      // Deslogar o usuário
+      await signOut();
+    } else {
+      _isError = false;
+      final docRef = db.collection("Usuarios").doc(currentUser);
+      final docSnapshot = await docRef.get();
+      
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data() as Map<String, dynamic>;
 
-          setName(data['Nome']);
-          setEmail(data['Email']);
-          setCPF(data['CPF']);
-          setPhone(data['Telefone']);
-          setNumContract(data['Contrato']);
-        },
-        onError: (e) => print("Error getting document: $e"),
-      );
-    } catch (e) {
-      print(e);
+        setName(data['Nome']);
+        setEmail(data['Email']);
+        setCPF(data['CPF']);
+        setPhone(data['Telefone']);
+        setNumContract(data['Contrato']);
+      } else {
+        // Documento do usuário não encontrado
+        _textError = 'Usuário não encontrado';
+        _isError = true;
+      }
     }
+  } catch (e) {
+    print('Erro ao recuperar dados do usuário: $e');
+    // Configurar o erro
+    _textError = 'Erro ao recuperar dados do usuário';
+    _isError = true;
+  }
+}
+
+  restoreData() {
+    setName('');
+    setCPF('');
+    setEmail('');
+    setPhone('');
+    setNumContract('');
+   
   }
 }
