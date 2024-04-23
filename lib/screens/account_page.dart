@@ -1,4 +1,4 @@
-import 'package:auth_sql/screens/auth/login.dart';
+import 'package:auth_sql/screens/auth/auth_page.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -28,7 +28,7 @@ class AccountPage extends StatelessWidget {
             children: [
               Text(
                 store.getName(),
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
@@ -36,7 +36,7 @@ class AccountPage extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 'Email: ${store.getEmail()}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 15,
                 ),
@@ -44,17 +44,17 @@ class AccountPage extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 'CPF: ${store.getCPF()}',
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: const TextStyle(color: Colors.black, fontSize: 15),
               ),
               const SizedBox(height: 4),
               Text(
                 'Telefone: ${store.getPhone()}',
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: const TextStyle(color: Colors.black, fontSize: 15),
               ),
               const SizedBox(height: 4),
               Text(
                 'Contrato: ${store.getContract()}',
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: const TextStyle(color: Colors.black, fontSize: 15),
               ),
               const SizedBox(height: 20),
               Container(
@@ -70,8 +70,8 @@ class AccountPage extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Sair da conta'),
-                          content: Text('Tem certeza que quer sair?'),
+                          title: const Text('Sair da conta'),
+                          content: const Text('Tem certeza que quer sair?'),
                           actions: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,7 +84,7 @@ class AccountPage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const LoginScreen(),
+                                            const AuthPage(),
                                       ),
                                       (route) => false,
                                     );
@@ -123,7 +123,7 @@ class AccountPage extends StatelessWidget {
       width: 105,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.green[500],
+        color: Colors.green
       ),
       child: TextButton(
         onPressed: onClick,

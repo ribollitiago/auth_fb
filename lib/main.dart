@@ -1,4 +1,4 @@
-import 'package:auth_sql/screens/auth/login.dart';
+import 'package:auth_sql/screens/auth/auth_page.dart';
 import 'package:auth_sql/screens/home_page.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/store/calendar/calendar.store.dart';
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
               return const HomePage();
             } else {
               print('Sem usuario');
-              return const LoginScreen();
+              return const AuthPage();
             }
           },
         ),

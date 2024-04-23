@@ -7,14 +7,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: formKey,
                     child: Column(
                       children: [
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         //Email Textfield
                         TextFieldString(
                           icon: const Icon(Icons.email),
@@ -55,7 +55,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (text!.isEmpty) {
                               return "Digite um e-mail";
                             }
-                            store.setEmail(text);
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 30),
+                        TextFieldString(
+                          icon: const Icon(Icons.email),
+                          hintText: "Digite seu CPF",
+                          labelText: 'CPF',
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite um CPF";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 30),
+                        TextFieldString(
+                          icon: const Icon(Icons.email),
+                          hintText: "Digite sua Identidade/RG",
+                          labelText: 'Identidade/RG',
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite um RG";
+                            }
                             return null;
                           },
                         ),
@@ -74,33 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  // Adicione aqui o código a ser executado quando o botão for pressionado
-                                },
-                                child: const Text(
-                                  'Esqueci a senha',
-                                  style: TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: 15,
-                                    decoration: TextDecoration.underline,
-                                    decorationThickness: 1,
-                                    decorationColor: Colors.black45,
-                                  ),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-        
                         //LOGIN button
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 30),
                         buttonDefault(
                           context,
                           () {
@@ -152,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         onPressed: onClick,
         child: const Text(
-          "Entrar",
+          "Avançar",
           style: TextStyle(color: Colors.white, fontSize: 17),
         ),
       ),
@@ -198,7 +200,7 @@ class AppBarWidget extends StatelessWidget {
                   Expanded(
                     child: Container(
                       child: const Text(
-                        'Login',
+                        'Cadastro',
                         style: TextStyle(
                             fontSize: 30,
                             color: Color(0xFF3D731C),
