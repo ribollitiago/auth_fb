@@ -1,5 +1,5 @@
 import 'package:auth_sql/screens/auth/login.dart';
-import 'package:auth_sql/screens/auth/register.dart';
+import 'package:auth_sql/screens/auth/register/register.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {

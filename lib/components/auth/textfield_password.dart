@@ -57,3 +57,57 @@ class TextFieldPassword extends StatelessWidget {
     );
   }
 }
+
+class TextFieldConfirmPassword extends StatelessWidget {
+  final String confirmPassword;
+  final bool shouldValidate;
+  final String? Function(String?)? validator;
+
+  const TextFieldConfirmPassword(
+      {super.key,
+      required this.confirmPassword,
+      required this.shouldValidate,
+      required this.validator});
+
+  @override
+  Widget build(BuildContext context) {
+    final store = Provider.of<AuthStore>(context);
+
+    TextEditingController confirmPasswordController =
+        TextEditingController(text: confirmPassword);
+
+    return Observer(
+      builder: (_) => TextFormField(
+        controller: confirmPasswordController,
+        validator: shouldValidate ? validator : null,
+        obscureText: !store.isVisible,
+        decoration: InputDecoration(
+            hintText: 'Confirme sua Senha',
+            hintStyle: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
+            labelText: "Confirme sua senha",
+            labelStyle: TextStyle(color: Colors.black),
+            border: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            enabledBorder: const OutlineInputBorder(
+              // Borda quando o campo não está em foco
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              // Borda quando o campo está em foco
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            suffixIcon: IconButton(
+                onPressed: () {
+                  store.visible();
+                },
+                icon: Icon(store.isVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined))),
+      ),
+    );
+  }
+}

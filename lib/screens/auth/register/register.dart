@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/components/auth/texfield_string.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/screens/auth/auth_page.dart';
-import 'package:auth_sql/store/auth/auth.store.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
+import 'package:auth_sql/screens/auth/register/address.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -15,16 +15,33 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _rgController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  late String _password;
+
+  late String _emailValue;
+  late String _cpfValue;
+  late String _rgValue;
 
   //bool para deixar a senha visivel ou não
   bool isVisible = false;
 
-  bool isLoginTrue = false;
-
   //key global para os form
   final formKey = GlobalKey<FormState>();
+
+  static const Color colorPrimary = Color(0xFF3D731C);
+  static const Color colorSecond = Color(0xFF73D935);
+
+  @override
+  void initState() {
+    super.initState();
+    _emailValue = _emailController.text;
+    _cpfValue = _cpfController.text;
+    _rgValue = _rgController.text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Observer(
           builder: (_) => CustomScrollView(
             slivers: [
-              AppBarWidget(context: context),
+              AppBarWidget(context: context, colorPrimary: colorPrimary),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,26 +61,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
-                        //Email Textfield
+
+                        //EMAIL Textfield
                         TextFieldString(
-                          icon: const Icon(Icons.email),
-                          hintText: "Digite seu email",
+                          hintText: "Digite seu Email",
                           labelText: 'Email',
-                          text: _emailController.text,
+                          initialValue: _emailValue,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um e-mail";
+                              return "Digite um Email";
+                            }
+                            if (!RegExp(r'^[\w-.]+@([\w-]+.)+[\w-]{2,4}$')
+                                .hasMatch(text)) {
+                              return "Email inválido";
                             }
                             return null;
                           },
+                          onChanged: (value) {
+                            setState(() {
+                              _emailValue = value;
+                            });
+                          },
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
+
+                        // //CPF Field
                         TextFieldString(
-                          icon: const Icon(Icons.email),
                           hintText: "Digite seu CPF",
                           labelText: 'CPF',
-                          text: _emailController.text,
+                          initialValue: _cpfValue,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
@@ -71,13 +98,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                             return null;
                           },
+                          onChanged: (value) {
+                            setState(() {
+                              _cpfValue = value;
+                            });
+                          },
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
+
+                        // //IDENTIDADE / RG Field
                         TextFieldString(
-                          icon: const Icon(Icons.email),
-                          hintText: "Digite sua Identidade/RG",
-                          labelText: 'Identidade/RG',
-                          text: _emailController.text,
+                          hintText: "Digite seu RG/Identidade",
+                          labelText: 'RG/Identidade',
+                          initialValue: _rgValue,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
@@ -85,9 +118,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                             return null;
                           },
+                          onChanged: (value) {
+                            setState(() {
+                              _rgValue = value;
+                            });
+                          },
                         ),
-                        const SizedBox(height: 30),
-                        //Senha field
+                        const SizedBox(height: 20),
+
+                        //SENHA field
                         TextFieldPassword(
                           password: _passwordController.text,
                           shouldValidate: true,
@@ -97,28 +136,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             } else if (value.length < 6) {
                               return "Digite uma senha maior";
                             }
+                            _password = value;
                             store.setPassword(value);
                             return null;
                           },
                         ),
+                        const SizedBox(height: 20),
+
+                        //CONFIRM SENHA Field
+                        TextFieldConfirmPassword(
+                          confirmPassword: _confirmPasswordController.text,
+                          shouldValidate: true,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Confirme sua senha';
+                            }
+                            if (value != _password) {
+                              return "As senhas não são iguais";
+                            }
+                            if (value == _password) {
+                              return null;
+                            }
+                          },
+                        ),
+
                         //LOGIN button
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         buttonDefault(
                           context,
                           () {
                             if (formKey.currentState!.validate()) {
-                              store.signInWithEmailPassword(context);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const AddressScreen()));
                             }
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Text(
                             store.getTextError(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.red,
                             ),
                             textAlign: TextAlign.center,
@@ -142,12 +202,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(45),
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            Color(0xFF3D731C), // Cor mais escura
-            Color(0xFF73D935), // Cor mais clara
+            colorPrimary,
+            colorSecond,
           ],
         ),
       ),
@@ -164,8 +224,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 class AppBarWidget extends StatelessWidget {
   final BuildContext context;
+  final Color colorPrimary;
 
-  const AppBarWidget({required this.context});
+  const AppBarWidget({required this.context, required this.colorPrimary});
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +245,8 @@ class AppBarWidget extends StatelessWidget {
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: Color(0xFF3D731C),
           ),
+          color: colorPrimary,
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(

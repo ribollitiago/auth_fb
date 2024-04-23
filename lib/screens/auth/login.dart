@@ -45,20 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         SizedBox(height: 10),
                         //Email Textfield
-                        TextFieldString(
-                          icon: const Icon(Icons.email),
-                          hintText: "Digite seu email",
-                          labelText: 'Email',
-                          text: _emailController.text,
-                          shouldValidate: true,
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite um e-mail";
-                            }
-                            store.setEmail(text);
-                            return null;
-                          },
-                        ),
+                        // TextFieldString(
+                        //   hintText: "Digite seu email",
+                        //   labelText: 'Email',
+                        //   text: _emailController.text,
+                        //   shouldValidate: true,
+                        //   validator: (text) {
+                        //     if (text!.isEmpty) {
+                        //       return "Digite um e-mail";
+                        //     }
+                        //     store.setEmail(text);
+                        //     return null;
+                        //   },
+                        // ),
                         const SizedBox(height: 30),
                         //Senha field
                         TextFieldPassword(

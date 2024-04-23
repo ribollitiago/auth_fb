@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 
 class TextFieldString extends StatelessWidget {
-  final String text;
+  final String initialValue;
   final String hintText;
   final String labelText;
-  final Icon icon;
   final bool shouldValidate;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged; // Adicionando onChanged
 
   const TextFieldString({
     Key? key,
-    required this.icon,
+    required this.initialValue,
     required this.hintText,
     required this.labelText,
-    required this.text,
     required this.shouldValidate,
     required this.validator,
+    this.onChanged, // Permitindo que onChanged seja opcional
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textController = TextEditingController(text: text);
-
     return TextFormField(
-      initialValue: _textController.text,
-      validator: shouldValidate
-            ? validator
-            : null, 
+      initialValue: initialValue,
+      validator: shouldValidate ? validator : null,
+      onChanged: onChanged, // Passando o onChanged aqui
       style: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.normal,
