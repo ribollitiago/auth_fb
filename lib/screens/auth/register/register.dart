@@ -1,7 +1,7 @@
+import 'package:auth_sql/store/auth/register.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/components/auth/texfield_string.dart';
 import 'package:auth_sql/components/auth/textfield_password.dart';
 import 'package:auth_sql/screens/auth/auth_page.dart';
@@ -19,12 +19,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _rgController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   late String _password;
-
-  late String _emailValue;
-  late String _cpfValue;
-  late String _rgValue;
 
   //bool para deixar a senha visivel ou não
   bool isVisible = false;
@@ -36,16 +33,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   static const Color colorSecond = Color(0xFF73D935);
 
   @override
-  void initState() {
-    super.initState();
-    _emailValue = _emailController.text;
-    _cpfValue = _cpfController.text;
-    _rgValue = _rgController.text;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final store = Provider.of<AuthStore>(context);
+    final store = Provider.of<RegisterStore>(context);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(color: Colors.white),
@@ -60,68 +49,95 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     key: formKey,
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
-
-                        //EMAIL Textfield
                         TextFieldString(
-                          hintText: "Digite seu Email",
-                          labelText: 'Email',
-                          initialValue: _emailValue,
+                          labelText: 'Nome',
+                          hintText: "Digite o Nome",
+                          text: _emailController.text,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um Email";
+                              return "Digite o Nome";
+                            }
+                            store.setName(text);
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        //EMAIL Textfield
+                        TextFieldString(
+                          labelText: 'Email',
+                          hintText: "Digite o Email",
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite o email";
                             }
                             if (!RegExp(r'^[\w-.]+@([\w-]+.)+[\w-]{2,4}$')
                                 .hasMatch(text)) {
                               return "Email inválido";
                             }
+                            store.setEmail(text);
                             return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _emailValue = value;
-                            });
                           },
                         ),
                         const SizedBox(height: 20),
-
-                        // //CPF Field
                         TextFieldString(
-                          hintText: "Digite seu CPF",
+                          labelText: 'Telefone',
+                          hintText: "Digite o Telefone",
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite o Telefone";
+                            }
+                            store.setPhone(text);
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        // CPF Field
+                        TextFieldString(
                           labelText: 'CPF',
-                          initialValue: _cpfValue,
+                          hintText: "Digite o CPF",
+                          text: _cpfController.text,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um CPF";
+                              return "Digite o CPF";
                             }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _cpfValue = value;
-                            });
+                            if (text.length == 11 || text.length == 14) {
+                              text = text.replaceAll(RegExp(r'[^0-9]'), '');
+                              print(text);
+                              store.setCPF(text);
+                              return null;
+                            } else {
+                              return 'Digite um CPF válido';
+                            }
                           },
                         ),
                         const SizedBox(height: 20),
 
-                        // //IDENTIDADE / RG Field
                         TextFieldString(
-                          hintText: "Digite seu RG/Identidade",
-                          labelText: 'RG/Identidade',
-                          initialValue: _rgValue,
+                          labelText: 'RG',
+                          hintText: "Digite o RG",
+                          text: _rgController.text,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um RG";
+                              return "Digite o RG";
                             }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _rgValue = value;
-                            });
+                            if (text.length > 8 && text.length < 14) {
+                              text = text.replaceAll(RegExp(r'[-.]'), '');
+                              text = text.toUpperCase();
+                              print(text);
+                              store.setRG(text);
+                              return null;
+                            } else {
+                              return 'Digite um RG válido';
+                            }
                           },
                         ),
                         const SizedBox(height: 20),
@@ -159,21 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                           },
                         ),
-
-                        //LOGIN button
-                        const SizedBox(height: 20),
-                        buttonDefault(
-                          context,
-                          () {
-                            if (formKey.currentState!.validate()) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const AddressScreen()));
-                            }
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 5),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Text(
@@ -183,6 +185,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                        ),
+
+                        //LOGIN button
+                        const SizedBox(height: 5),
+                        buttonDefault(context, () async {
+                          final isFormValid = formKey.currentState!.validate();
+                          await store.duplicateEntryCheck();
+
+                          if (isFormValid && !store.getIsError()) {
+                            store.restoreCEP();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const AddressScreen()));
+                          }
+                        }),
+                        const SizedBox(
+                          height: 20,
                         ),
                       ],
                     ),
@@ -230,16 +248,19 @@ class AppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = Provider.of<RegisterStore>(context);
     return SliverAppBar(
       expandedHeight: 120,
       centerTitle: true,
       pinned: true,
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       elevation: 0,
       leading: Padding(
         padding: const EdgeInsets.only(left: 20, top: 10),
         child: IconButton(
           onPressed: () {
+            store.restoreData();
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const AuthPage()));
           },

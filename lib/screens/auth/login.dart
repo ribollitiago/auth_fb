@@ -18,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  late String _emailValue;
+
   //bool para deixar a senha visivel ou não
   bool isVisible = false;
 
@@ -25,6 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //key global para os form
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailValue = _emailController.text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +52,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: 10),
-                        //Email Textfield
-                        // TextFieldString(
-                        //   hintText: "Digite seu email",
-                        //   labelText: 'Email',
-                        //   text: _emailController.text,
-                        //   shouldValidate: true,
-                        //   validator: (text) {
-                        //     if (text!.isEmpty) {
-                        //       return "Digite um e-mail";
-                        //     }
-                        //     store.setEmail(text);
-                        //     return null;
-                        //   },
-                        // ),
+
+                        TextFieldString(
+                          labelText: 'Email',
+                          hintText: "Digite o Email",
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite o email";
+                            }
+                             if (!RegExp(r'^[\w-.]+@([\w-]+.)+[\w-]{2,4}$')
+                                .hasMatch(text)) {
+                              return "Email inválido";
+                            }
+                            store.setEmail(text);
+                            return null;
+                          },
+                        ),
+
                         const SizedBox(height: 30),
                         //Senha field
                         TextFieldPassword(
@@ -97,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-        
+
                         //LOGIN button
                         const SizedBox(height: 10),
                         buttonDefault(

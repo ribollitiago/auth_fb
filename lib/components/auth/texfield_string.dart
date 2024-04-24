@@ -1,37 +1,43 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 
 class TextFieldString extends StatelessWidget {
-  final String initialValue;
+  final String text;
   final String hintText;
-  final String labelText;
+  final String? labelText;
   final bool shouldValidate;
   final String? Function(String?)? validator;
-  final void Function(String)? onChanged; // Adicionando onChanged
+  final Widget? suffixIcon;
+  final Function(String)? onChanged;
+  final bool? enabled;
 
   const TextFieldString({
-    Key? key,
-    required this.initialValue,
+    super.key,
     required this.hintText,
-    required this.labelText,
+    required this.text,
     required this.shouldValidate,
     required this.validator,
-    this.onChanged, // Permitindo que onChanged seja opcional
-  }) : super(key: key);
+    this.onChanged,
+    this.labelText,
+    this.suffixIcon,
+    this.enabled,
+  });
 
+  // TextFild Controller
   @override
   Widget build(BuildContext context) {
+    TextEditingController _textController = TextEditingController(text: text);
+
     return TextFormField(
-      initialValue: initialValue,
+      initialValue: _textController.text,
+      onChanged: onChanged,
+      enabled: enabled,
       validator: shouldValidate ? validator : null,
-      onChanged: onChanged, // Passando o onChanged aqui
-      style: const TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.normal,
-      ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(
-          color: Colors.black,
+          color: Colors.black54,
           fontWeight: FontWeight.normal,
         ),
         labelText: labelText,
@@ -41,6 +47,10 @@ class TextFieldString extends StatelessWidget {
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
+        ),
+        disabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.black54),
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),

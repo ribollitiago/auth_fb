@@ -1,7 +1,8 @@
+import 'package:auth_sql/screens/auth/auth_page.dart';
+import 'package:auth_sql/store/auth/register.store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/components/auth/texfield_string.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -12,21 +13,13 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  TextEditingController _cepController = TextEditingController();
-  TextEditingController _streetController = TextEditingController();
-  TextEditingController _neighborhoodController = TextEditingController();
-  TextEditingController _numberController = TextEditingController();
-  TextEditingController _complementController = TextEditingController();
-  TextEditingController _cityController = TextEditingController();
-  TextEditingController _stateController = TextEditingController();
-
-  late String _cepValue;
-  late String _streetValue;
-  late String _neighborhoodValue;
-  late String _numberValue;
-  late String _complementValue;
-  late String _cityValue;
-  late String _stateValue;
+  final TextEditingController _cepController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _neighborhoodController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _complementController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
 
   // Chave global para os formulários
   final formKey = GlobalKey<FormState>();
@@ -34,20 +27,8 @@ class _AddressScreenState extends State<AddressScreen> {
   static const Color colorSecond = Color(0xFF73D935);
 
   @override
-  void initState() {
-    super.initState();
-    _cepValue = _cepController.text;
-    _streetValue = _streetController.text;
-    _neighborhoodValue = _neighborhoodController.text;
-    _numberValue = _numberController.text;
-    _complementValue = _complementController.text;
-    _cityValue = _cityController.text;
-    _stateValue = _stateController.text;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final store = Provider.of<AuthStore>(context);
+    final store = Provider.of<RegisterStore>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -58,6 +39,8 @@ class _AddressScreenState extends State<AddressScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
+        shadowColor: Colors.white,
+        surfaceTintColor: Colors.white,
         centerTitle: true,
         iconTheme: const IconThemeData(
           color: colorPrimary,
@@ -82,7 +65,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               fontWeight: FontWeight.w500,
                               color: colorPrimary),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         const Text(
                           'Informar o motivo de pedir o endereço ao usuário de maneira leve.',
                           style: TextStyle(
@@ -90,143 +73,161 @@ class _AddressScreenState extends State<AddressScreen> {
                               fontWeight: FontWeight.normal,
                               color: Colors.black54),
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         TextFieldString(
                           hintText: "Digite seu CEP",
-                          labelText: 'CEP',
-                          initialValue: _cepValue,
+                          labelText: "CEP",
+                          text: _cepController.text,
                           shouldValidate: true,
+                          onChanged: (text) async {
+                            if (text.length == 8) {
+                              await store.searchCep(text);
+                            } else {
+                              store.restoreCEP();
+                            }
+                            setState(() {});
+                          },
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um CEP";
+                              return "Digite seu CEP";
+                            }
+                            if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+                              return "Digite apenas números";
+                            }
+                            if (text.length != 8) {
+                              return "Digite um CEP válido";
+                            }
+                            store.setCEP(text);
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        TextFieldString(
+                          hintText:
+                              store.getTrueCEP() ? store.getStreet() : "Rua",
+                          enabled: !store.trueCEP,
+                          text: _streetController.text,
+                          shouldValidate: true,
+                          validator: (_) {
+                            if (store.getStreet().isEmpty) {
+                              return "Digite sua Rua";
                             }
                             return null;
                           },
-                          onChanged: (value) {
-                            setState(() {
-                              _cepValue = value;
-                            });
-                          },
                         ),
-                        SizedBox(height: 15,),
-                        TextFieldString(
-                          hintText: "Digite sua Rua",
-                          labelText: 'Rua',
-                          initialValue: _streetValue,
-                          shouldValidate: true,
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite uma Rua";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _streetValue = value;
-                            });
-                          },
+                        const SizedBox(
+                          height: 15,
                         ),
-                        SizedBox(height: 15,),
                         TextFieldString(
-                          hintText: "Digite seu Bairro",
-                          labelText: 'Bairro',
-                          initialValue: _neighborhoodValue,
-                          shouldValidate: true,
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite um Bairro";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _neighborhoodValue = value;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 15,),
-                        TextFieldString(
-                          hintText: "Digite o número da casa",
                           labelText: 'Número',
-                          initialValue: _numberValue,
+                          hintText: "Digite o Número",
+                          text: _numberController.text,
                           shouldValidate: true,
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite um Número";
+                              return "Digite o número";
                             }
+                            if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+                              return "Digite apenas números";
+                            }
+                            store.setNumber(text);
                             return null;
                           },
-                          onChanged: (value) {
-                            setState(() {
-                              _numberValue = value;
-                            });
-                          },
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         TextFieldString(
-                          hintText: "Digite um complemento",
                           labelText: 'Complemento',
-                          initialValue: _complementValue,
+                          hintText: "Digite o Complemento",
+                          text: _complementController.text,
                           shouldValidate: true,
                           validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite um Complemento";
-                            }
+                            store.setComplement(text);
                             return null;
                           },
-                          onChanged: (value) {
-                            setState(() {
-                              _complementValue = value;
-                            });
-                          },
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         TextFieldString(
-                          hintText: "Digite a Cidade",
-                          labelText: 'Cidade',
-                          initialValue: _cityValue,
+                          hintText: store.getTrueCEP()
+                              ? store.getDistrict()
+                              : "Bairro",
+                          enabled: !store.trueCEP,
+                          text: _neighborhoodController.text,
                           shouldValidate: true,
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite a Cidade";
+                          validator: (_) {
+                            if (store.getDistrict().isEmpty) {
+                              return "Digite seu Bairro";
                             }
                             return null;
                           },
-                          onChanged: (value) {
-                            setState(() {
-                              _cityValue = value;
-                            });
-                          },
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         TextFieldString(
-                          hintText: "Digite o Estado",
-                          labelText: 'Estado',
-                          initialValue: _stateValue,
+                          hintText:
+                              store.getTrueCEP() ? store.getCity() : "Cidade",
+                          enabled: !store.trueCEP,
+                          text: _cityController.text,
                           shouldValidate: true,
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite o Estado";
+                          validator: (_) {
+                            if (store.getCity().isEmpty) {
+                              return "Digite sua Cidade";
                             }
                             return null;
                           },
-                          onChanged: (value) {
-                            setState(() {
-                              _stateValue = value;
-                            });
+                        ),
+                        const SizedBox(height: 15),
+                        TextFieldString(
+                          hintText:
+                              store.getTrueCEP() ? store.getState() : "Estado",
+                          enabled: !store.trueCEP,
+                          text: _stateController.text,
+                          shouldValidate: true,
+                          validator: (_) {
+                            if (store.getState().isEmpty) {
+                              return "Digite seu Estado";
+                            }
+                            return null;
                           },
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(height: 15),
                         buttonDefault(
                           context,
-                          () {
-                            if (formKey.currentState!.validate()) {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => const AddressScreen()));
+                          (){
+                            final isForm1Valid =
+                                formKey.currentState!.validate();
+
+                            if (isForm1Valid && !store.getIsError()) {
+                              store.signUpWithEmailPassword();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const AuthPage()));
                             }
                           },
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Text(
+                            store.getTextError(),
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                       ],
                     ),
                   ),
@@ -238,6 +239,7 @@ class _AddressScreenState extends State<AddressScreen> {
       ),
     );
   }
+
   Widget buttonDefault(BuildContext context, VoidCallback? onClick) {
     return Container(
       height: 55,

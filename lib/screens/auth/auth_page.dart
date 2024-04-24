@@ -46,6 +46,7 @@ class _AuthPageState extends State<AuthPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: buttonLogin(context, () {
+              
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const LoginScreen()));
             }),

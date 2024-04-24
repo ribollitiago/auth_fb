@@ -30,7 +30,7 @@ class TextFieldPassword extends StatelessWidget {
         decoration: InputDecoration(
             hintText: 'Digite sua Senha',
             hintStyle: const TextStyle(
-              color: Colors.black,
+              color: Colors.black54,
               fontWeight: FontWeight.normal,
             ),
             labelText: "Senha",
@@ -84,7 +84,7 @@ class TextFieldConfirmPassword extends StatelessWidget {
         decoration: InputDecoration(
             hintText: 'Confirme sua Senha',
             hintStyle: const TextStyle(
-              color: Colors.black,
+              color: Colors.black54,
               fontWeight: FontWeight.normal,
             ),
             labelText: "Confirme sua senha",
