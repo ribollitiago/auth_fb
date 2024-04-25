@@ -1,4 +1,5 @@
-import 'package:auth_sql/screens/home_page.dart';
+import 'package:auth_sql/screens/home/home_page.dart';
+import 'package:auth_sql/screens/home/initial_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,10 +43,10 @@ abstract class _AuthStore with Store {
   String _cpf = '';
 
   @observable
-  String _phone = '';
+  String _rg = '';
 
   @observable
-  String _numContract = '';
+  String _phone = '';
 
   @observable
   String _password = '';
@@ -72,8 +73,8 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  getContract() {
-    return _numContract;
+  getRg() {
+    return _rg;
   }
 
   @action
@@ -112,13 +113,13 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  void setPhone(String phone) {
-    _phone = phone;
+  void setNumContract(String rg) {
+    _rg = rg;
   }
 
   @action
-  void setNumContract(String numContract) {
-    _numContract = numContract;
+  void setPhone(String phone) {
+    _phone = phone;
   }
 
   @action
@@ -151,7 +152,7 @@ abstract class _AuthStore with Store {
       if (!_isError) {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => InitialPage()),
             (route) => false);
 
         _textError = '';
@@ -219,8 +220,8 @@ Future<void> recoveryData(String currentUser) async {
         setName(data['Nome']);
         setEmail(data['Email']);
         setCPF(data['CPF']);
+        setNumContract(data['RG']);
         setPhone(data['Telefone']);
-        setNumContract(data['Contrato']);
       } else {
         // Documento do usuário não encontrado
         _textError = 'Usuário não encontrado';

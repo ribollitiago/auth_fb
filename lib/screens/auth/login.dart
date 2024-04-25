@@ -18,8 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  late String _emailValue;
-
   //bool para deixar a senha visivel ou não
   bool isVisible = false;
 
@@ -27,12 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //key global para os form
   final formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _emailValue = _emailController.text;
-  }
 
   @override
   Widget build(BuildContext context) {

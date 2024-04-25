@@ -1,5 +1,6 @@
 import 'package:auth_sql/screens/auth/auth_page.dart';
-import 'package:auth_sql/screens/home_page.dart';
+import 'package:auth_sql/screens/home/home_page.dart';
+import 'package:auth_sql/screens/home/initial_page.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/store/auth/register.store.dart';
 import 'package:auth_sql/store/calendar/calendar.store.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
 
               store.recoveryData(currentUser.uid);
               print('Usuário logado: ${currentUser.uid}');
-              return const HomePage();
+              return InitialPage();
             } else {
               print('Sem usuario');
               return const AuthPage();

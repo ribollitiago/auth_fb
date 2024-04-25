@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 class AccountPage extends StatelessWidget {
   const AccountPage({Key? key});
 
+  static const Color colorPrimary = Color(0xFF3D731C);
+  static const Color colorSecond = Color(0xFF73D935);
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AuthStore>(context);
@@ -15,7 +18,7 @@ class AccountPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Minha conta',
-          style: TextStyle(color: Colors.green),
+          style: TextStyle(color: colorPrimary),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -53,16 +56,23 @@ class AccountPage extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Contrato: ${store.getContract()}',
+                'Identidade: ${store.getRg()}',
                 style: const TextStyle(color: Colors.black, fontSize: 15),
               ),
               const SizedBox(height: 20),
               Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * .9,
+                height: 55,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.green[500],
+                  borderRadius: BorderRadius.circular(45),
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      colorPrimary, 
+                      colorSecond, 
+                    ],
+                  ),
                 ),
                 child: TextButton(
                   onPressed: () {
@@ -83,8 +93,7 @@ class AccountPage extends StatelessWidget {
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AuthPage(),
+                                        builder: (context) => const AuthPage(),
                                       ),
                                       (route) => false,
                                     );
@@ -122,9 +131,7 @@ class AccountPage extends StatelessWidget {
       height: 40,
       width: 105,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.green
-      ),
+          borderRadius: BorderRadius.circular(8), color: Colors.green),
       child: TextButton(
         onPressed: onClick,
         child: Text(

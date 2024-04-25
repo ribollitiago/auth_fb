@@ -1,4 +1,5 @@
-import 'package:auth_sql/screens/home_page.dart';
+import 'package:auth_sql/screens/home/home_page.dart';
+import 'package:auth_sql/screens/home/initial_page.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -40,7 +41,7 @@ class SucessPage extends StatelessWidget {
                   child: TextButton(
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => HomePage(),
                       ),
                     ),
                     child: const Text(

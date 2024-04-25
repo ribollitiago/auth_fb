@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 part 'calendar.store.g.dart';
@@ -24,7 +23,7 @@ abstract class _CalendarStore with Store {
   }
 
   // Função para imprimir todos os dados da coleção 'Parceiros' e recuperar os nomes
-  void retrievePartnerNames() async {
+  Future<void> retrievePartnerNames() async {
     try {
       final partnerCollection = _db.collection("Parceiros");
       final snapshot = await partnerCollection.get();

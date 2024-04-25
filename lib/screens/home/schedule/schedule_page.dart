@@ -1,18 +1,59 @@
-import 'package:auth_sql/screens/schedule/sucess_page.dart';
+import 'package:auth_sql/screens/home/schedule/sucess_page.dart';
 import 'package:auth_sql/store/calendar/calendar.store.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({Key? key}) : super(key: key);
+  const SchedulePage({super.key});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  late Future<void> _loadDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDataFuture = _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final store = Provider.of<CalendarStore>(context, listen: false);
+    await store.retrievePartnerNames();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _loadDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingScreen();
+        } else {
+          return _buildContent();
+        }
+      },
+    );
+  }
+
+
   CalendarFormat _format = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
@@ -41,45 +82,8 @@ class _SchedulePageState extends State<SchedulePage> {
 
   bool _isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchDataWithDelay();
-  }
 
-  Future<void> _fetchDataWithDelay() async {
-    await Future.delayed(Duration(seconds: 1)); // Simulando um carregamento de 1 segundo
-
-    final store = Provider.of<CalendarStore>(context, listen: false);
-    listConsultorio = await store.getPartnerNames().toSet().toList();
-    setState(() {
-      valueConsul = listConsultorio.isNotEmpty ? listConsultorio.first : '';
-      store.retrieveExam(valueConsul);
-      _isLoading = false; // Indica que a busca de dados foi concluída
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Agendamento',
-          style: TextStyle(color: Colors.green),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: _isLoading ? _buildLoading() : _buildBody(),
-    );
-  }
-
-  Widget _buildLoading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildBody() {
+  Widget _buildContent() {
     return CustomScrollView(
       slivers: [
         _buildConsultorioSelection(),
@@ -124,6 +128,7 @@ class _SchedulePageState extends State<SchedulePage> {
               onChanged: (String? newValue) {
                 setState(() {
                   valueConsul = newValue!;
+                  print(valueConsul);
                 });
               },
               items: listConsultorio.map((String valueItem) {
@@ -263,8 +268,7 @@ class _SchedulePageState extends State<SchedulePage> {
             alignment: Alignment.center,
             child: const Text(
               'Fim de semana não disponível, selecione outra data',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
             ),
           ))
         : SliverGrid(

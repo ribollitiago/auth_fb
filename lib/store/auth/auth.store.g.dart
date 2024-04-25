@@ -149,6 +149,21 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$_rgAtom = Atom(name: '_AuthStore._rg', context: context);
+
+  @override
+  String get _rg {
+    _$_rgAtom.reportRead();
+    return super._rg;
+  }
+
+  @override
+  set _rg(String value) {
+    _$_rgAtom.reportWrite(value, super._rg, () {
+      super._rg = value;
+    });
+  }
+
   late final _$_phoneAtom = Atom(name: '_AuthStore._phone', context: context);
 
   @override
@@ -161,22 +176,6 @@ mixin _$AuthStore on _AuthStore, Store {
   set _phone(String value) {
     _$_phoneAtom.reportWrite(value, super._phone, () {
       super._phone = value;
-    });
-  }
-
-  late final _$_numContractAtom =
-      Atom(name: '_AuthStore._numContract', context: context);
-
-  @override
-  String get _numContract {
-    _$_numContractAtom.reportRead();
-    return super._numContract;
-  }
-
-  @override
-  set _numContract(String value) {
-    _$_numContractAtom.reportWrite(value, super._numContract, () {
-      super._numContract = value;
     });
   }
 
@@ -269,11 +268,11 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
-  dynamic getContract() {
-    final _$actionInfo = _$_AuthStoreActionController.startAction(
-        name: '_AuthStore.getContract');
+  dynamic getRg() {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.getRg');
     try {
-      return super.getContract();
+      return super.getRg();
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }
@@ -335,22 +334,22 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
-  void setPhone(String phone) {
-    final _$actionInfo =
-        _$_AuthStoreActionController.startAction(name: '_AuthStore.setPhone');
+  void setNumContract(String rg) {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+        name: '_AuthStore.setNumContract');
     try {
-      return super.setPhone(phone);
+      return super.setNumContract(rg);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setNumContract(String numContract) {
-    final _$actionInfo = _$_AuthStoreActionController.startAction(
-        name: '_AuthStore.setNumContract');
+  void setPhone(String phone) {
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setPhone');
     try {
-      return super.setNumContract(numContract);
+      return super.setPhone(phone);
     } finally {
       _$_AuthStoreActionController.endAction(_$actionInfo);
     }
