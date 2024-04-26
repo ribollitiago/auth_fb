@@ -53,7 +53,6 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-
   CalendarFormat _format = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _currentDay = DateTime.now();

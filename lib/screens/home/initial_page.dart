@@ -1,10 +1,10 @@
 import 'package:auth_sql/screens/home/home_page.dart';
 import 'package:auth_sql/screens/home/partner_page.dart';
+import 'package:auth_sql/screens/home/schedule_temporary.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_sql/screens/home/account_page.dart';
 import 'package:auth_sql/screens/home/cashback_page.dart';
-import 'package:auth_sql/screens/home/schedule/schedule_page.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:async';
@@ -37,7 +37,7 @@ class _InitialPageState extends State<InitialPage> {
   final List<Widget> screens = [
     HomePage(),
     PartnerPage(),
-    SchedulePage(),
+    ScheduleTemporaryPage(),
     CashBackPage(),
   ];
 
@@ -62,7 +62,7 @@ class _InitialPageState extends State<InitialPage> {
         backgroundColor: colorPrimary,
         child: Icon(Icons.qr_code, color: Colors.white, size: 30),
         onPressed: () {},
-        shape: CircleBorder(), // Define a forma como círculo
+        shape: CircleBorder(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -75,7 +75,7 @@ class _InitialPageState extends State<InitialPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                   minWidth: 90,
                   maxWidth: 90,
                 ),
@@ -105,7 +105,7 @@ class _InitialPageState extends State<InitialPage> {
                 ),
               ),
               Container(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                   minWidth: 90,
                   maxWidth: 90,
                 ),
@@ -136,7 +136,7 @@ class _InitialPageState extends State<InitialPage> {
                 ),
               ),
               Container(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                   minWidth: 90,
                   maxWidth: 90,
                 ),
@@ -144,7 +144,7 @@ class _InitialPageState extends State<InitialPage> {
                   minWidth: 40,
                   onPressed: () {
                     setState(() {
-                      currentScreen = SchedulePage();
+                      currentScreen = ScheduleTemporaryPage();
                       currentTab = 2;
                     });
                   },
@@ -168,7 +168,7 @@ class _InitialPageState extends State<InitialPage> {
                 ),
               ),
               Container(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                   minWidth: 90,
                   maxWidth: 90,
                 ),
@@ -231,20 +231,20 @@ class _InitialPageState extends State<InitialPage> {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Text(
                   'Olá, ${store.getName()}!',
-                  style: TextStyle(color: Colors.white, fontSize: 30),
+                  style: const TextStyle(color: Colors.white, fontSize: 30),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
           ],

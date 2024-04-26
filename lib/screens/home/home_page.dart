@@ -1,6 +1,8 @@
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_sql/screens/home/account_page.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _searchController = TextEditingController();
   static const Color colorPrimary = Color(0xFF3D731C);
   static const Color colorSecond = Color(0xFF73D935);
 
@@ -21,6 +24,19 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           UserWidget(),
+          SliverPadding(
+            padding: EdgeInsets.only(bottom: 20.0),
+          ),
+          SearchWidget(
+              hintText: 'Pesquisar',
+              labelText: 'Encontre profissionais e empresas',
+              shouldValidate: false,
+              text: _searchController.text,
+              textController: _searchController,
+              suffixIcon: Icon(Icons.search),
+              validator: (text) {
+                return null;
+              }),
           SliverPadding(
             padding: EdgeInsets.only(bottom: 10.0),
           ),
@@ -43,11 +59,10 @@ class _HomePageState extends State<HomePage> {
           color: colorPrimary,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(
-                  0, 3), // altere o deslocamento vertical conforme necessário
+              color: Colors.grey.withOpacity(0.4),
+              spreadRadius: 3,
+              blurRadius: 6,
+              offset: Offset(0, 1),
             ),
           ],
         ),
@@ -58,6 +73,11 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 10),
+                  child: SvgPicture.asset('assets/svg/SIM_CLUB_LOGO.svg', width: 35, height: 35,),
+                ),
+                Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: IconButton(
@@ -85,7 +105,9 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
               ],
             ),
-            SizedBox(height: 5,)
+            SizedBox(
+              height: 5,
+            )
           ],
         ),
       ),
@@ -101,6 +123,48 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             color: Colors.grey[400],
             height: 150,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter SearchWidget({
+    required TextEditingController textController,
+    required String text,
+    required final String hintText,
+    required final String? labelText,
+    required final bool shouldValidate,
+    required final String? Function(String?)? validator,
+    final Widget? suffixIcon,
+  }) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: TextFormField(
+          initialValue: textController.text,
+          validator: shouldValidate ? validator : null,
+          decoration: InputDecoration(
+            prefixIcon: suffixIcon, // Alterado para prefixIcon
+            hintText: hintText,
+            hintStyle: const TextStyle(
+              color: Colors.black54,
+              fontWeight: FontWeight.normal,
+            ),
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Colors.black),
+            border: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black54),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
           ),
         ),
       ),

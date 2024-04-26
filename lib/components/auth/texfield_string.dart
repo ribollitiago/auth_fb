@@ -9,6 +9,7 @@ class TextFieldString extends StatelessWidget {
   final bool shouldValidate;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final Icon? icon;
   final Function(String)? onChanged;
   final bool? enabled;
 
@@ -22,6 +23,7 @@ class TextFieldString extends StatelessWidget {
     this.labelText,
     this.suffixIcon,
     this.enabled,
+    this.icon
   });
 
   // TextFild Controller
@@ -35,6 +37,7 @@ class TextFieldString extends StatelessWidget {
       enabled: enabled,
       validator: shouldValidate ? validator : null,
       decoration: InputDecoration(
+        suffixIcon: suffixIcon,
         hintText: hintText,
         hintStyle: const TextStyle(
           color: Colors.black54,

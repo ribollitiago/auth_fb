@@ -82,11 +82,25 @@ class _AddressScreenState extends State<AddressScreen> {
                           text: _cepController.text,
                           shouldValidate: true,
                           onChanged: (text) async {
-                            if (text.length == 8) {
-                              await store.searchCep(text);
+                            // Remove todos os caracteres não numéricos
+                            String cleanedText =
+                                text.replaceAll(RegExp(r'[^0-9]'), '');
+
+                            // Limita o texto a 8 caracteres
+                            if (cleanedText.length > 8) {
+                              cleanedText = cleanedText.substring(0, 8);
+                            }
+
+                            // Atualiza o texto no controller
+                            _cepController.text = cleanedText;
+
+                            // Verifica se o CEP tem 8 dígitos
+                            if (cleanedText.length == 8) {
+                              await store.searchCep(cleanedText);
                             } else {
                               store.restoreCEP();
                             }
+
                             setState(() {});
                           },
                           validator: (text) {
@@ -201,7 +215,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         const SizedBox(height: 15),
                         buttonDefault(
                           context,
-                          (){
+                          () {
                             final isForm1Valid =
                                 formKey.currentState!.validate();
 
