@@ -21,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  String _name = '';
   late String _password;
 
   //bool para deixar a senha visivel ou não
@@ -49,6 +50,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     key: formKey,
                     child: Column(
                       children: [
+
+                        const SizedBox(height: 5),
+
                         TextFieldString(
                           labelText: 'Nome',
                           hintText: "Digite o Nome",
@@ -58,8 +62,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (text!.isEmpty) {
                               return "Digite o Nome";
                             }
-                            store.setName(text);
+                            _name += "$text ";
                             return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        TextFieldString(
+                          labelText: 'Sobrenome',
+                          hintText: "Digite o Sobrenome",
+                          text: _emailController.text,
+                          shouldValidate: true,
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite o Sobrenome";
+                            }
+                            if (_name.trim().isNotEmpty) {
+                              _name += text;
+                              store.setName(_name);
+                              return null;
+                            }
                           },
                         ),
 

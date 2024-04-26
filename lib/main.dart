@@ -4,6 +4,7 @@ import 'package:auth_sql/screens/home/initial_page.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
 import 'package:auth_sql/store/auth/register.store.dart';
 import 'package:auth_sql/store/calendar/calendar.store.dart';
+import 'package:auth_sql/store/partner.store.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider<RegisterStore>(
           create: (_) => RegisterStore(),
+        ),
+        Provider<PartnerStore>(
+          create: (_) => PartnerStore(),
         ),
       ],
       child: MaterialApp(

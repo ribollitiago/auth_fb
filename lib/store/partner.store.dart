@@ -6,7 +6,7 @@ part 'partner.store.g.dart';
 class PartnerStore = _PartnerStore with _$PartnerStore;
 
 abstract class _PartnerStore with Store {
-
+  FirebaseFirestore db = FirebaseFirestore.instance;
   //Partner
   @observable
   String _partner = '';
@@ -25,8 +25,13 @@ abstract class _PartnerStore with Store {
 
   @observable
   String _partnerPhone = '';
+  //Plans
+  @observable
+  List<String> planNames = [];
 
   Map<String, dynamic> partnerMap = {};
+
+  Map<String, dynamic> partnerMap2 = {};
 
   //Partner
   @action
@@ -45,39 +50,38 @@ abstract class _PartnerStore with Store {
   String getPartnerPhone() => _partnerPhone;
 
   //Partner
-  Future<void> partnerIdSearch(value, client) async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("Usuarios")
-        .where(value, isEqualTo: client.toLowerCase())
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      var doc = snapshot.docs[0];
-      _partnerId = doc.id;
-      _partnerName = doc['Nome'];
-      _partnerEmail = doc['Email'];
-      _partnerAddress = doc['Endereço'];
-      _partnerPhone = doc['Telefone'];
-
-      print(
-          "$value válido. Id: $_partnerId, Nome: $_partnerName, Email:  $_partnerEmail, Endereço:  $_partnerAddress, Telefone:  $_partnerPhone");
-
-      partnerMap = {
-        "ID": _partnerId,
-        "Nome": _partnerName,
-        "Email": _partnerEmail,
-        "Endereço": _partnerAddress,
-        "Telefone": _partnerPhone ,
-      };
-    } else {
-      print("Nenhum $value foi encontrado.");
+  Future<void> planIdSearch() async {
+    try {
+      final partnerCollection = db.collection("Parceiros");
+      final snapshot = await partnerCollection.get();
+      var index = 0;
+      while (index < snapshot.docs.length) {
+        if (snapshot.docs.isNotEmpty) {
+          final doc = snapshot.docs[index];
+          String partnerId = doc.id;
+          String partnerName = doc['Nome'];
+          partnerMap = {
+            "ID": partnerId,
+            "Nome": partnerName,
+            "Endereço": doc['Endereço'],
+          };
+          print(partnerMap);
+          partnerMap2[partnerName] = partnerMap;
+        } else {
+          print("Nenhum  foi encontrado.");
+        }
+        index++;
+      }
+      print(partnerMap2);
+    } catch (e) {
+      print("Ocorreu um erro: $e");
     }
   }
 
   @action
   Future<Map<String, Map<String, dynamic>>> getAllPartners() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("Parceiros")
-        .get();
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection("Parceiros").get();
 
     Map<String, Map<String, dynamic>> allPartners = {};
 

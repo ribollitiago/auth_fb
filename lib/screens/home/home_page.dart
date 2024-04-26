@@ -1,4 +1,5 @@
 import 'package:auth_sql/store/auth/auth.store.dart';
+import 'package:auth_sql/store/partner.store.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_sql/screens/home/account_page.dart';
 import 'package:flutter/widgets.dart';
@@ -53,6 +54,14 @@ class _HomePageState extends State<HomePage> {
 
   SliverToBoxAdapter UserWidget() {
     final store = Provider.of<AuthStore>(context);
+    final store2 = Provider.of<PartnerStore>(context);
+
+    store2.planIdSearch();
+
+    List<String> names = (store.getName()).split(" ");
+    String firstName = names.isNotEmpty ? names[0] : "";
+    String lastName = names.length > 1 ? names[1] : "";
+
     return SliverToBoxAdapter(
       child: Container(
         decoration: BoxDecoration(
@@ -75,7 +84,11 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 10),
-                  child: SvgPicture.asset('assets/svg/SIM_CLUB_LOGO.svg', width: 35, height: 35,),
+                  child: SvgPicture.asset(
+                    'assets/svg/SIM_CLUB_LOGO.svg',
+                    width: 35,
+                    height: 35,
+                  ),
                 ),
                 Spacer(),
                 Padding(
@@ -99,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                   width: 10,
                 ),
                 Text(
-                  'Olá, ${store.getName()}!',
+                  'Olá, $firstName $lastName!',
                   style: TextStyle(color: Colors.white, fontSize: 28),
                 ),
                 Spacer(),
