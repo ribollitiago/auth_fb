@@ -65,14 +65,12 @@ abstract class _PartnerStore with Store {
             "Nome": partnerName,
             "Endereço": doc['Endereço'],
           };
-          print(partnerMap);
           partnerMap2[partnerName] = partnerMap;
         } else {
           print("Nenhum  foi encontrado.");
         }
         index++;
       }
-      print(partnerMap2);
     } catch (e) {
       print("Ocorreu um erro: $e");
     }

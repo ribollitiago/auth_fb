@@ -2,6 +2,7 @@ import 'package:auth_sql/screens/home/home_page.dart';
 import 'package:auth_sql/screens/home/partner_page.dart';
 import 'package:auth_sql/screens/home/schedule_temporary.dart';
 import 'package:auth_sql/store/auth/auth.store.dart';
+import 'package:auth_sql/store/partner.store.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_sql/screens/home/account_page.dart';
 import 'package:auth_sql/screens/home/cashback_page.dart';
@@ -17,19 +18,29 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<InitialPage> {
+  late Future<void> _loadDataFuture;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _loadDataFuture = _loadData().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     _fetchDataWithDelay();
   }
 
+  Future<void> _loadData() async {
+    final store = Provider.of<PartnerStore>(context, listen: false);
+    await store.planIdSearch();
+  }
+
   Future<void> _fetchDataWithDelay() async {
-    await Future.delayed(const Duration(seconds: 2)); 
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
-      _isLoading = false; 
-      
+      _isLoading = false;
     });
   }
 

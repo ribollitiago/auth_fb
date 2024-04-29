@@ -42,11 +42,6 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(bottom: 10.0),
           ),
           BoxWidget(),
-          BoxWidget(),
-          BoxWidget(),
-          BoxWidget(),
-          BoxWidget(),
-          BoxWidget(),
         ],
       ),
     );
@@ -128,15 +123,47 @@ class _HomePageState extends State<HomePage> {
   }
 
   SliverToBoxAdapter BoxWidget() {
+    final store = Provider.of<PartnerStore>(context);
+    store.partnerMap2;
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: Container(
-            color: Colors.grey[400],
-            height: 150,
-          ),
+        child: Column(
+          // Change outer Column for vertical separation
+          children: [
+            for (final partner in store.partnerMap2.values)
+              Container(
+                // Wrap each partner info in a Container
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10.0), // Add margin
+                decoration: BoxDecoration(
+                  color: Colors.white, // Set background color
+                  borderRadius: BorderRadius.circular(5), // Add border radius
+                  boxShadow: const [
+                    // Add subtle shadow
+                    BoxShadow(
+                      color: Color.fromRGBO(224, 224, 224, 1),
+                      blurRadius: 3.0,
+                      offset: Offset(0.0, 3.0),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0), // Add internal padding
+                  child: Column(
+                    children: [
+                      Text('Nome: ${partner['Nome']}'), // Display partner name
+                      Text(
+                        'Endereço: ${partner['Endereço']['Rua']}, ${partner['Endereço']['Numero']}, ${partner['Endereço']['CEP']}',
+                      ), // Display partner address
+                      // ... other widgets
+                    ],
+                  ),
+                ),
+              ),
+            // ... your existing widgets after partner loop
+          ],
         ),
       ),
     );
