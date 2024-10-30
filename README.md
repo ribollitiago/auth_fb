@@ -1,16 +1,19 @@
-# auth_sql
+# app_club
 
-A new Flutter project.
+Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas médicas, foi desenvolvido inicialmente por nós, juntamente ao sistema interno , mas depois foi vendido para ser continuado pelos desenvolvedores da empresa.
 
-## Getting Started
+## 🛠️ Construído com
 
-This project is a starting point for a Flutter application.
+* [Flutter](https://flutter.dev/) - O framework utilizado
+* [Firebase](https://firebase.google.com/) - Banco de Dados
 
-A few resources to get you started if this is your first Flutter project:
+## 📌 Versão
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+(Projeto finalizado) Ultima versão projetada por nós.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ✒️ Autores
+
+[Tiago Ribolli](https://gist.github.com/ribollitiago) e [Gabriel Figueiredo](https://gist.github.com/GabrielFMA)
+
+---
+⌨️ por [Tiago Ribolli](https://gist.github.com/ribollitiago)
