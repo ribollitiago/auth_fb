@@ -20,10 +20,12 @@ Detalhes das telas desenvolvidas no aplicativo.
 
 ## Tela Inicial
 Tela que é carregada ao entrar no aplicativo pela primeira vez.
+
 <img src="https://github.com/user-attachments/assets/5bdea62f-969c-4d86-828d-d0733326537a" width="300" alt="Tela Inicial" />
 
 ## Login
 Tela de login, utilizamos o FirebaseAuth para o Login dos usuários, juntamente com os tratamentos de erros.
+
 <img src="https://github.com/user-attachments/assets/d7aa3320-cc86-4f02-a124-ec95e72569f4" width="300" alt="Login" />
 
 ## Cadastro
