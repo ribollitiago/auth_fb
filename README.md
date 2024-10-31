@@ -1,6 +1,6 @@
 # app-club
 
-Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas médicas, foi desenvolvido inicialmente por nós, juntamente ao sistema interno , mas depois foi vendido para ser continuado pelos desenvolvedores da empresa.
+Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas médicas, foi desenvolvido inicialmente por nós, juntamente ao sistema interno [web-club](https://github.com/GabrielFMA/web-club), mas depois foi vendido para ser continuado pelos desenvolvedores da empresa.
 
 ## 🛠️ Construído com
 
