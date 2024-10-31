@@ -34,7 +34,7 @@ Tela de cadastro com implementação da ViaCep para facilitar o cadastro do ende
 <img src="https://github.com/user-attachments/assets/9300e25d-b3c4-4ffa-ac38-e43cfc0c0bf1" width="300" alt="Cadastro" /> <img src="https://github.com/user-attachments/assets/dd5f6b53-d041-4de5-9591-34a1de8dc617" width="300" alt="Cadastro 2" />
 
 ## Home
-Tela home resgatando os dados do Firestore, e atualizando em tempo real os "parceiros" cadastrados no Sistema WEB.
+Tela home resgatando os dados do Firestore, e atualizando em tempo real os "parceiros" cadastrados no [web-club](https://github.com/GabrielFMA/web-club).
 
 <img src="https://github.com/user-attachments/assets/e266d730-1f50-4ad4-93ca-e9d23f9dbb90" width="300" alt="Home" />
 
