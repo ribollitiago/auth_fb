@@ -7,6 +7,13 @@ Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas m
 * [Flutter](https://flutter.dev/) - Framework
 * [Firebase](https://firebase.google.com/) - Banco de Dados
 * [ViaCep](https://viacep.com.br) - API para a pesquisa de CEP
+* [MobX](https://mobx.pub/) - Gerenciamento de estado reativo
+
+### Organização e Gerenciamento de Estado com MobX
+
+Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://mobx.pub/) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
+
+Com o MobX, foi possível separar e organizar o código em **stores** (repositórios de estado), que armazenam o estado da aplicação e permitem uma sincronização em tempo real das mudanças de estado com a interface do usuário. Esse modelo reativo simplifica o acompanhamento de estados em diferentes telas e componentes, proporcionando uma arquitetura mais modular e fácil de manter.
 
 # Telas
 Detalhes das telas desenvolvidas no aplicativo.
@@ -18,9 +25,13 @@ Detalhes das telas desenvolvidas no aplicativo.
 <img src="https://github.com/user-attachments/assets/d7aa3320-cc86-4f02-a124-ec95e72569f4" width="300" alt="Login" />
 
 ## Cadastro
+Tela de cadastro com implementação da ViaCep para facilitar o cadastro do endereço do cliente.
+
 <img src="https://github.com/user-attachments/assets/9300e25d-b3c4-4ffa-ac38-e43cfc0c0bf1" width="300" alt="Cadastro" /> <img src="https://github.com/user-attachments/assets/dd5f6b53-d041-4de5-9591-34a1de8dc617" width="300" alt="Cadastro 2" />
 
 ## Home
+Tela home resgatando os dados do Firestore, e atualizando em tempo real os "parceiros" cadastrados no Sistema WEB.
+
 <img src="https://github.com/user-attachments/assets/e266d730-1f50-4ad4-93ca-e9d23f9dbb90" width="300" alt="Home" />
 
 ## 📡 API
@@ -29,7 +40,7 @@ Este projeto integra-se com a [API ViaCep](https://viacep.com.br) para consulta 
 
 ## 📌 Versão
 
-(Projeto finalizado) Ultima versão projetada por nós.
+(Projeto finalizado) Última versão projetada por nós.
 
 ## ✒️ Autores
 
