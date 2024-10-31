@@ -11,7 +11,7 @@ Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas m
 
 ### Organização e Gerenciamento de Estado com MobX
 
-Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://mobx.pub/) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
+Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://pub.dev/packages/mobx) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
 
 Com o MobX, foi possível separar e organizar o código em **stores** (repositórios de estado), que armazenam o estado da aplicação e permitem uma sincronização em tempo real das mudanças de estado com a interface do usuário. Esse modelo reativo simplifica o acompanhamento de estados em diferentes telas e componentes, proporcionando uma arquitetura mais modular e fácil de manter.
 
@@ -19,9 +19,11 @@ Com o MobX, foi possível separar e organizar o código em **stores** (repositó
 Detalhes das telas desenvolvidas no aplicativo.
 
 ## Tela Inicial
+Tela que é carregada ao entrar no aplicativo pela primeira vez.
 <img src="https://github.com/user-attachments/assets/5bdea62f-969c-4d86-828d-d0733326537a" width="300" alt="Tela Inicial" />
 
 ## Login
+Tela de login, utilizamos o FirebaseAuth para o Login dos usuários, juntamente com os tratamentos de erros.
 <img src="https://github.com/user-attachments/assets/d7aa3320-cc86-4f02-a124-ec95e72569f4" width="300" alt="Login" />
 
 ## Cadastro
