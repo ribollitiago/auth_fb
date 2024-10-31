@@ -1,6 +1,6 @@
 # app-club
 
-Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas médicas, foi desenvolvido inicialmente por nós, juntamente ao sistema interno [web-club](https://github.com/GabrielFMA/web-club), mas depois foi vendido para ser continuado pelos desenvolvedores da empresa.
+Um aplicativo para uma empresa de "Clube de benefícios" com foco em consultas médicas, desenvolvido inicialmente por nós, juntamente com o sistema interno [web-club](https://github.com/GabrielFMA/web-club), mas depois vendido para ser continuado pelos desenvolvedores da empresa.
 
 ## 🛠️ Construído com
 
@@ -19,24 +19,25 @@ Com o MobX, foi possível separar e organizar o código em **stores** (repositó
 Detalhes das telas desenvolvidas no aplicativo.
 
 ## Tela Inicial
-Tela que é carregada ao entrar no aplicativo pela primeira vez.
+A tela de boas-vindas exibida quando o usuário abre o aplicativo pela primeira vez.
 
 <img src="https://github.com/user-attachments/assets/5bdea62f-969c-4d86-828d-d0733326537a" width="300" alt="Tela Inicial" />
 
 ## Login
-Tela de login, utilizamos o FirebaseAuth para o Login dos usuários, juntamente com os tratamentos de erros.
+Tela de autenticação, onde o FirebaseAuth é utilizado para login dos usuários, incluindo tratamento de erros para feedback ao usuário.
 
-<img src="https://github.com/user-attachments/assets/d7aa3320-cc86-4f02-a124-ec95e72569f4" width="300" alt="Login" />
+<img src="https://github.com/user-attachments/assets/d7aa3320-cc86-4f02-a124-ec95e72569f4" width="300" alt="Tela de Login" />
 
 ## Cadastro
-Tela de cadastro com implementação da ViaCep para facilitar o cadastro do endereço do cliente.
+Tela de cadastro do usuário, com integração da API ViaCep para preenchimento automático dos dados de endereço a partir do CEP.
 
-<img src="https://github.com/user-attachments/assets/9300e25d-b3c4-4ffa-ac38-e43cfc0c0bf1" width="300" alt="Cadastro" /> <img src="https://github.com/user-attachments/assets/dd5f6b53-d041-4de5-9591-34a1de8dc617" width="300" alt="Cadastro 2" />
+<img src="https://github.com/user-attachments/assets/9300e25d-b3c4-4ffa-ac38-e43cfc0c0bf1" width="300" alt="Tela de Cadastro com ViaCep" /> 
+<img src="https://github.com/user-attachments/assets/dd5f6b53-d041-4de5-9591-34a1de8dc617" width="300" alt="Tela de Cadastro - Preenchimento de Endereço" />
 
 ## Home
-Tela home resgatando os dados do Firestore, e atualizando em tempo real os "parceiros" cadastrados no [web-club](https://github.com/GabrielFMA/web-club).
+Tela principal, onde os dados dos parceiros cadastrados no [web-club](https://github.com/GabrielFMA/web-club) são carregados e exibidos em tempo real.
 
-<img src="https://github.com/user-attachments/assets/e266d730-1f50-4ad4-93ca-e9d23f9dbb90" width="300" alt="Home" />
+<img src="https://github.com/user-attachments/assets/e266d730-1f50-4ad4-93ca-e9d23f9dbb90" width="300" alt="Tela Home com parceiros em tempo real" />
 
 ## 📡 API
 
